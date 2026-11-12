@@ -1,0 +1,106 @@
+/* =========================================
+   LOGIN / AUTH FORM STİLLERİ
+   ========================================= */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px 20px;
+}
+
+.auth-card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 440px;
+    padding: 36px 32px;
+    border-radius: 18px;
+    border: 1px solid #ffec99;
+    box-shadow: 0 8px 24px rgba(45, 52, 54, 0.06);
+}
+
+.auth-header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.auth-header h2 {
+    font-size: 24px;
+    color: #182346;
+    margin-bottom: 6px;
+}
+
+.auth-header p {
+    font-size: 14px;
+    color: #636e72;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2b3a67;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #dbe4ff;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #2d3436;
+    background-color: #f8f9fa;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #4c6ef5;
+    background-color: #ffffff;
+}
+
+.submit-btn {
+    margin-top: 8px;
+    padding: 13px;
+    background-color: #3b5bdb;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #364fc7;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #636e72;
+}
+
+.auth-footer a {
+    color: #3b5bdb;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}

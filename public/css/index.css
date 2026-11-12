@@ -1,0 +1,194 @@
+/* Ana Akış Alanı İç Düzen */
+.feed-container {
+    padding: 20px;
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+/* Post Kartı */
+.post-card {
+    background-color: #ffffff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1px solid #f1f3f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Kullanıcı Başlığı */
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #dbe4ff;
+}
+
+.user-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #182346;
+}
+
+.post-info-text {
+    font-size: 12px;
+    color: #868e96;
+}
+
+.post-action-desc {
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+/* İstatistik / Meta Çubuğu */
+.book-stats-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+    color: #5c5f66;
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+/* İnceleme Metin Kısmı */
+.post-text-content {
+    font-size: 14px;
+    color: #212529;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Gömülü Kitap Kartı (Yatay Tasarım) */
+.book-card-embedded {
+    display: flex;
+    gap: 14px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.book-cover-placeholder {
+    width: 60px;
+    height: 85px;
+    background-color: #eef2ff;
+    border: 1.5px dashed #bac8ff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    text-align: center;
+    color: #3b5bdb;
+    flex-shrink: 0;
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.book-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #182346;
+}
+
+.book-author {
+    font-size: 13px;
+    color: #495057;
+}
+
+.book-rating-info {
+    font-size: 12px;
+    color: #868e96;
+}
+
+.badge-status {
+    display: inline-block;
+    background-color: #dbe4ff;
+    color: #3b5bdb;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    width: fit-content;
+    margin-top: 2px;
+}
+
+/* Alt Etkileşim Butonları */
+.post-footer-actions {
+    display: flex;
+    gap: 20px;
+    border-top: 1px solid #f1f3f5;
+    padding-top: 10px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #868e96;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+}
+
+.action-btn:hover {
+    color: #3b5bdb;
+}
+/* Kitap Kapak Resmi Alanı */
+.book-cover-container {
+    width: 60px;
+    height: 85px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #eef2ff;
+    border: 1px solid #dbe4ff;
+}
+
+.book-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Resmi orantılı şekilde alana sığdırır */
+    display: block;
+}
+.stat-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stat-icon {
+    width: 14px;
+    height: 14px;
+    stroke: #6c757d;
+}

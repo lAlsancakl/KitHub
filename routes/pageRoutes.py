@@ -13,12 +13,17 @@ async def read_index(request: Request):
     with open("public/views/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-@router.get("/login", response_class=HTMLResponse)
+@router.get("/login/", response_class=HTMLResponse)
 async def read_login(request: Request):
     with open("public/views/login.html", "r", encoding="utf-8") as f:
         return f.read()
 
-@router.get("/signup", response_class=HTMLResponse)
+@router.get("/signup/", response_class=HTMLResponse)
 async def read_signup(request: Request):
     with open("public/views/signup.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@router.get("/profile/", response_class=HTMLResponse)
+async def read_profile(request: Request):
+    with open("public/views/profile.html", "r", encoding="utf-8") as f:
         return f.read()

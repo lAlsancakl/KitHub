@@ -11,5 +11,6 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 # Sayfa yönlendirme router'ını ana uygulamaya bağlıyoruz
 app.include_router(page_router)
 app.include_router(api_router)
+
 # mysqldump -u root -p kithub_db > kithub_backup.sql
 # mysql -u root -p kithub_db < kithub_backup.sql

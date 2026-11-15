@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: localhost    Database: kithub_db
 -- ------------------------------------------------------
--- Server version	8.0.46
+-- Server version	8.0.45
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,10 +24,10 @@ DROP TABLE IF EXISTS `books`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `books` (
   `book_id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `publisher` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `publisher` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `page_count` int NOT NULL,
-  `book_cover` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `book_cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`book_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -52,9 +52,9 @@ CREATE TABLE `posts` (
   `post_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `user_book_id` int DEFAULT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `post_type` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `post_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`post_id`),
   KEY `fk_posts_user` (`user_id`),
   KEY `fk_posts_user_book` (`user_book_id`),
@@ -83,7 +83,7 @@ CREATE TABLE `user_books` (
   `user_book_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `book_id` int NOT NULL,
-  `status` enum('want_to_read','reading','finished','dropped') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'want_to_read',
+  `status` enum('want_to_read','reading','finished','dropped') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'want_to_read',
   `current_page` int DEFAULT '0',
   `started_at` date DEFAULT NULL,
   `finished_at` date DEFAULT NULL,
@@ -114,15 +114,15 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
-  `profile_photo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `profile_photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'lily','sha256$9704ae71a4b7aa2ff5f9c843ea079497$a795e083110e5fed3ddea9b2df4d458706866404d0602504580c06ff073b484e','female','2005-06-04','uploads/profiles/2e256e63b6aa4e7ea3a41e446e756dec.png','2026-11-15 13:55:17');
+INSERT INTO `users` VALUES (1,'lily','sha256$9704ae71a4b7aa2ff5f9c843ea079497$a795e083110e5fed3ddea9b2df4d458706866404d0602504580c06ff073b484e','female','2005-06-04','uploads/profiles/2e256e63b6aa4e7ea3a41e446e756dec.png','2026-11-15 13:55:17'),(4,'Alsancak','sha256$eaf6c046ec833be70a01bf1257875f2e$a861c8c8ab2e066421a1c94a979f8c32a72c5dca30050cb3af2af304bb421d42','male','2005-07-12','uploads/profiles/0f468e03c55b4eddbca9f6296f37a3bb.jpg','2026-11-15 15:02:04');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -144,4 +144,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-15 17:07:09
+-- Dump completed on 2026-11-15 18:31:30

@@ -2,10 +2,8 @@
 import os
 import uuid
 
-
 from datetime import date
 from pathlib import Path
-
 from fastapi import APIRouter, Depends, Form, File, UploadFile, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.responses import JSONResponse
@@ -20,10 +18,6 @@ router = APIRouter()
 
 UPLOAD_DIR = Path("uploads/profiles")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
-
-
-
 
 @router.post("/register")
 async def register_user(

@@ -85,10 +85,10 @@ async def register_user(
 
         db.commit()
 
-        return RedirectResponse(
-            url="/login/",
-            status_code=303
-        )
+        return JSONResponse(
+        status_code=200,
+        content={"message": "Registration successful!"}
+    )
 
     except IntegrityError:
         db.rollback()

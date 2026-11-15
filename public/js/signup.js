@@ -19,7 +19,12 @@ form.addEventListener("submit", async function(event) {
         errorMessage.textContent = data.detail;
     } 
     else if (response.ok) {
-        window.location.href = "/login/";
+        errorMessage.style.color = "green";
+        errorMessage.textContent = data.message;
+    
+        setTimeout(() => {
+            window.location.href = "/login/";
+        }, 2000);
     }
     else {
         errorMessage.textContent = data.detail || "Registration failed.";

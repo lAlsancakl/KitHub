@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from routes.pageRoutes import router as page_router
 from routes.api import router as api_router
+
 app = FastAPI()
 
 # Statik dosyaları (CSS, JS, Resimler) dışarıya açıyoruz

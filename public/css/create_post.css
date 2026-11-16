@@ -1,4 +1,6 @@
-/* --- CREATE POST DROPDOWN MENÜ STİLLERİ --- */
+
+/* CREATE POST DROPDOWN MENU */
+
 .create-post-wrapper {
     position: relative;
     width: 100%;
@@ -11,57 +13,83 @@
     left: 0;
     width: 100%;
     background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(24, 35, 70, 0.15);
-    padding: 6px;
-    display: none; /* Başlangıçta gizli */
+    border: 1px solid #e1e6f5;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(24, 35, 70, 0.13);
+    padding: 7px;
+    display: none;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     z-index: 9999;
 }
 
 .create-post-menu.open {
-    display: flex; /* Açıldığında görünür olur */
+    display: flex;
+}
+
+.create-post-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 7px;
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 9999;
+}
+
+.create-post-menu.open {
+    display: flex;
 }
 
 .create-menu-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 11px;
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 13px;
     background: none;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
-    color: #182346;
+    color: var(--text);
     cursor: pointer;
     text-align: left;
-    transition: background-color 0.15s, color 0.15s;
+    transition: all 0.2s ease;
 }
 
 .create-menu-item svg {
-    width: 16px;
-    height: 16px;
-    stroke: #3b5bdb;
+    width: 18px;
+    height: 18px;
+    stroke: var(--accent);
     flex-shrink: 0;
+    transition: stroke 0.2s ease;
 }
 
 .create-menu-item:hover {
-    background-color: #eef2ff;
-    color: #3b5bdb;
+    background-color: var(--accent-light);
+    color: var(--accent-hover);
+    transform: translateX(3px);
 }
 
+.create-menu-item:hover svg {
+    stroke: var(--accent-hover);
+}
 
-/* --- POP-UP MODAL STİLLERİ --- */
+/* MODAL OVERLAY */
+
 .kithub-modal-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(24, 35, 70, 0.45);
-    backdrop-filter: blur(3px);
-    display: none; /* Başlangıçta gizli */
+    background-color: rgba(24, 35, 70, 0.48);
+    backdrop-filter: blur(5px);
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 16px;
@@ -69,65 +97,280 @@
 }
 
 .kithub-modal-overlay.open {
-    display: flex; /* Açıldığında ekranda görünür */
+    display: flex;
 }
+
+
+/* MODAL BOX */
 
 .kithub-modal-box {
     width: 100%;
-    max-width: 450px;
-    height: 500px;
+    max-width: 480px;
+    max-height: 90vh;
     background-color: #ffffff;
-    border-radius: 14px;
-    border: 1px solid #f1f3f5;
-    box-shadow: 0 12px 32px rgba(24, 35, 70, 0.18);
-    overflow: hidden;
-    animation: modalPop 0.16s ease-out;
+    border-radius: 20px;
+    border: 1px solid #e9edf8;
+    box-shadow: 0 20px 60px rgba(24, 35, 70, 0.22);
+    overflow-y: auto;
+    animation: modalPop 0.22s ease-out;
 }
 
 @keyframes modalPop {
     from {
         opacity: 0;
-        transform: scale(0.96);
+        transform: translateY(12px) scale(0.97);
     }
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: translateY(0) scale(1);
     }
 }
+
+
+/* MODAL HEADER */
 
 .kithub-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid #f1f3f5;
+    padding: 20px 24px;
+    border-bottom: 1px solid #edf0f7;
+    background-color: #fafbff;
 }
 
 .kithub-modal-header h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: 19px;
     font-weight: 700;
     color: #182346;
+    letter-spacing: -0.3px;
 }
 
 .modal-close-btn {
     background: none;
     border: none;
-    font-size: 22px;
+    font-size: 25px;
     line-height: 1;
     color: #868e96;
     cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 6px;
+    padding: 5px 9px;
+    border-radius: 9px;
+    transition: all 0.2s ease;
 }
 
 .modal-close-btn:hover {
-    background-color: #f1f3f5;
-    color: #182346;
+    background-color: #eef2ff;
+    color: #3b5bdb;
+    transform: rotate(90deg);
 }
 
+
+/* MODAL BODY */
+
 .kithub-modal-body {
-    padding: 20px;
+    padding: 24px;
     font-size: 14px;
     color: #495057;
+}
+
+
+/* FORM FIELDS */
+
+.kithub-modal-body .form-group {
+    margin-bottom: 17px;
+}
+
+.kithub-modal-body label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: #2b3a67;
+}
+
+.kithub-modal-body input,
+.kithub-modal-body select,
+.kithub-modal-body textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #dfe4f0;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #2d3436;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.kithub-modal-body input:focus,
+.kithub-modal-body select:focus,
+.kithub-modal-body textarea:focus {
+    border-color: #748ffc;
+    box-shadow: 0 0 0 3px rgba(116, 143, 252, 0.13);
+}
+
+/* FILE INPUT */
+
+#readModal input[type="file"] {
+    padding: 10px;
+    background-color: #fafbff;
+    border: 1px dashed #b8c5ed;
+    cursor: pointer;
+}
+
+#readModal input[type="file"]::file-selector-button {
+    background-color: #eef2ff;
+    color: #3b5bdb;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 12px;
+    margin-right: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* BOOK COVER PREVIEW */
+
+#coverPreview {
+    display: block;
+    max-width: 120px;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(24, 35, 70, 0.12);
+}
+
+/* READING STATUS */
+
+#readingStatus {
+    cursor: pointer;
+}
+
+/* CONDITIONAL FIELDS */
+
+#currentPageGroup,
+#durationGroup {
+    padding: 14px;
+    background-color: #f7f8ff;
+    border: 1px solid #e9edf8;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+/* SAVE READING BUTTON */
+
+#readModal button[type="submit"] {
+    width: 100%;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 11px;
+    background-color: #748ffc;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#readModal button[type="submit"]:hover {
+    background-color: #5c7cfa;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(92, 124, 250, 0.25);
+}
+
+/* FORM MESSAGE */
+
+#readingMessage {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #3b5bdb;
+}
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+    .kithub-modal-box {
+        max-height: 92vh;
+        border-radius: 16px;
+    }
+
+    .kithub-modal-header {
+        padding: 17px 19px;
+    }
+
+    .kithub-modal-body {
+        padding: 19px;
+    }
+}
+/* SAVE A READING - BROWN & BEIGE THEME */
+
+#readModal .kithub-modal-box {
+    background-color: #fffaf5;
+    border-color: #eadfd5;
+}
+
+#readModal .kithub-modal-header {
+    background-color: #f5ebe3;
+    border-bottom-color: #eadfd5;
+}
+
+#readModal .kithub-modal-header h3 {
+    color: #654b3c;
+}
+
+#readModal .kithub-modal-body {
+    color: #6b5548;
+}
+
+#readModal label {
+    color: #654b3c;
+}
+
+#readModal input,
+#readModal select {
+    background-color: #ffffff;
+    border-color: #dfcfc2;
+    color: #554237;
+}
+
+#readModal input:focus,
+#readModal select:focus {
+    border-color: #b98b72;
+    box-shadow: 0 0 0 3px rgba(185, 139, 114, 0.15);
+}
+
+#readModal input[type="file"] {
+    background-color: #fdf7f1;
+    border-color: #c9a994;
+}
+
+#readModal input[type="file"]::file-selector-button {
+    background-color: #ead9cc;
+    color: #654b3c;
+}
+
+#readModal #currentPageGroup,
+#readModal #durationGroup {
+    background-color: #f7eee7;
+    border-color: #eadfd5;
+}
+
+#readModal button[type="submit"] {
+    background-color: #a9785e;
+    color: #ffffff;
+}
+
+#readModal button[type="submit"]:hover {
+    background-color: #865b45;
+    box-shadow: 0 5px 14px rgba(134, 91, 69, 0.2);
+}
+
+#readModal .modal-close-btn {
+    color: #927766;
+}
+
+#readModal .modal-close-btn:hover {
+    background-color: #ead9cc;
+    color: #654b3c;
 }

@@ -1,0 +1,268 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --sidebar: #f3ede5;
+    --accent: #bd8178;
+    --accent-hover: #a96e65;
+    --accent-light: #f2e2de;
+    --text: #403632;
+    --muted: #897c75;
+    --border: #e9dfd6;
+    --shadow: 0 4px 18px rgba(75, 52, 42, 0.06);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* Main Layout */
+.app-layout {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 300px;
+    min-height: 100vh;
+}
+
+/* Left Sidebar */
+.sidebar-left {
+    background-color: var(--sidebar);
+    border-right: 1px solid var(--border);
+    padding: 24px 18px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo-img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 22px;
+    display: block;
+}
+
+.sidebar-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: #d6c2b8;
+    border-radius: 10px;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-spacer {
+    height: 18px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--text);
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background-color: var(--accent-light);
+    color: var(--accent-hover);
+}
+
+.nav-item.active {
+    background-color: var(--accent-light);
+    color: var(--accent-hover);
+    font-weight: 700;
+}
+
+.nav-item.has-arrow {
+    justify-content: space-between;
+}
+
+.nav-item-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.nav-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.arrow-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+}
+
+/* Badges */
+.badge {
+    font-size: 11px;
+    font-weight: 600;
+    background-color: var(--accent-light);
+    color: var(--accent-hover);
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-left: 2px;
+}
+
+/* Create Post Button */
+.create-post-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 13px 16px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(189, 129, 120, 0.18);
+}
+
+.create-post-btn:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(189, 129, 120, 0.25);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    padding: 9px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--accent-light);
+}
+
+.footer-divider {
+    width: 1px;
+    height: 22px;
+    background-color: var(--border);
+}
+
+.settings-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 9px 12px;
+    border-radius: 10px;
+    flex: 1;
+    transition: background 0.2s;
+}
+
+.settings-link:hover {
+    background-color: var(--accent-light);
+}
+
+/* Main Feed */
+.main-feed {
+    background-color: var(--bg);
+    min-height: 100vh;
+}
+
+/* Right Sidebar */
+.sidebar-right {
+    background-color: #f6f1eb;
+    border-left: 1px solid var(--border);
+    padding: 24px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+/* Cursor Settings */
+.nav-item {
+    cursor: not-allowed;
+}
+
+.nav-item:nth-child(1),
+.nav-item:nth-child(9),
+.nav-item:nth-child(10) {
+    cursor: pointer;
+}
+
+.create-post-btn {
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .app-layout {
+        grid-template-columns: 80px minmax(0, 1fr);
+    }
+
+    .sidebar-right {
+        display: none;
+    }
+
+    .sidebar-left {
+        padding: 20px 10px;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-left {
+        display: none;
+    }
+}

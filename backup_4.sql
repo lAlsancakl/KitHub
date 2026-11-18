@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: localhost    Database: kithub_db
 -- ------------------------------------------------------
--- Server version	8.0.44
+-- Server version	8.0.45
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,14 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Current Database: `kithub_db`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `kithub_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-USE `kithub_db`;
 
 --
 -- Table structure for table `books`
@@ -37,7 +29,7 @@ CREATE TABLE `books` (
   `page_count` int NOT NULL,
   `book_cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`book_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,8 +38,38 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'a','b',222,'uploads/book_cover/2d33ea5fbf4b47b78f5a5e19f6a34c7a.jpg'),(2,'pırt','cıs',31,'uploads/book_cover/eafa90a0243d4be68945be16f02f2a3d.jpg'),(3,'deneme','denemeci',31,'uploads/book_cover/f767af958bf54e3e8494d6e9c00d83c9.jpg');
+INSERT INTO `books` VALUES (1,'a','b',222,'uploads/book_cover/2d33ea5fbf4b47b78f5a5e19f6a34c7a.jpg'),(2,'p?rt','c?s',31,'uploads/book_cover/eafa90a0243d4be68945be16f02f2a3d.jpg'),(3,'deneme','denemeci',31,'uploads/book_cover/f767af958bf54e3e8494d6e9c00d83c9.jpg'),(4,'Suç ve Ceza','Fyodor Dostoevsky',600,'uploads/book_cover/8ab0f72f5690461096a3b2954c03ed41.jpg');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `login_sessions`
+--
+
+DROP TABLE IF EXISTS `login_sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `login_sessions` (
+  `session_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `token_hash` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`session_id`),
+  UNIQUE KEY `token_hash` (`token_hash`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `login_sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `login_sessions`
+--
+
+LOCK TABLES `login_sessions` WRITE;
+/*!40000 ALTER TABLE `login_sessions` DISABLE KEYS */;
+INSERT INTO `login_sessions` VALUES (1,1,'e38a0faa0769c46a6ddd2c59092b5bc2c70d490182e9d14ef481a144851e2f30','2026-11-23 10:09:07','2026-11-16 10:09:07'),(2,1,'dd6f28173e57e697544bde0c5c8fa1145c3fdf288bbaf0765a784ec06eeeaf6b','2026-11-23 10:26:34','2026-11-16 10:26:33');
+/*!40000 ALTER TABLE `login_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -69,7 +91,7 @@ CREATE TABLE `posts` (
   KEY `fk_posts_user_book` (`user_book_id`),
   CONSTRAINT `fk_posts_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_posts_user_book` FOREIGN KEY (`user_book_id`) REFERENCES `user_books` (`user_book_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +100,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (1,3,1,'Added a by b to my reading list!','2026-11-18 13:21:08','reading'),(2,3,2,'Started reading pırt by cıs!','2026-11-18 13:25:04','reading'),(3,3,3,'Finished reading deneme by denemeci in 100 days!','2026-11-18 13:25:58','reading');
+INSERT INTO `posts` VALUES (1,3,1,'Added a by b to my reading list!','2026-11-18 13:21:08','reading'),(2,3,2,'Started reading p?rt by c?s!','2026-11-18 13:25:04','reading'),(3,3,3,'Finished reading deneme by denemeci in 100 days!','2026-11-18 13:25:58','reading'),(4,2,4,'Finished reading Suç ve Ceza by Fyodor Dostoevsky in 12 days!','2026-11-18 15:11:17','reading');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +125,7 @@ CREATE TABLE `user_books` (
   KEY `fk_user_books_book` (`book_id`),
   CONSTRAINT `fk_user_books_book` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_user_books_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,7 +134,7 @@ CREATE TABLE `user_books` (
 
 LOCK TABLES `user_books` WRITE;
 /*!40000 ALTER TABLE `user_books` DISABLE KEYS */;
-INSERT INTO `user_books` VALUES (1,3,1,'want_to_read',0,NULL,NULL,0),(2,3,2,'reading',20,'2026-11-18',NULL,0),(3,3,3,'finished',31,'2026-08-11','2026-11-18',100);
+INSERT INTO `user_books` VALUES (1,3,1,'want_to_read',0,NULL,NULL,0),(2,3,2,'reading',20,'2026-11-18',NULL,0),(3,3,3,'finished',31,'2026-08-11','2026-11-18',100),(4,2,4,'finished',600,'2026-11-07','2026-11-18',12);
 /*!40000 ALTER TABLE `user_books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,4 +177,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-18 16:39:00
+-- Dump completed on 2026-11-18 18:15:54

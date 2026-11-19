@@ -424,3 +424,37 @@ async def save_reading(
             os.remove(saved_cover)
 
         raise
+
+@router.get("/api/profile/{username}")
+def get_user_profile(username: str, db: Session = Depends(get_db)):
+    user = db.execute(
+        text("""
+            SELECT user_id, username, profile_photo, created_at
+            FROM users
+            WHERE LOWER(username) = LOWER(:username)
+            LIMIT 1
+        """),
+        {"username": username.strip()}
+    ).mappings().first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    created_at = user["created_at"]
+    joined_text = (
+        f"Joined {created_at.strftime('%B %Y')}"
+        if created_at else "Joined recently"
+    )
+
+    photo_url = (
+        "/" + user["profile_photo"].lstrip("/")
+        if user["profile_photo"] else "/public/images/default-profile.png"
+    )
+
+    return {
+        "user_id": user["user_id"],
+        "username": user["username"],
+        "profile_photo": photo_url,
+        "created_at": created_at.isoformat() if created_at else None,
+        "joined_text": joined_text
+    }

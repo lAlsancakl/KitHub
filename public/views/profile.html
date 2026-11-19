@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KitHub - Alsancak (@Alsancakl)</title>
+    <title>KitHub - Profile</title>
     <link rel="icon" type="image/png" href="/public/images/favicon.png">
     <link rel="stylesheet" href="/public/css/main.css">
     <link rel="stylesheet" href="/public/css/index.css">
@@ -75,7 +75,7 @@
                     </div>
 
                     <div id="userMenu" hidden>
-                        <a href="/profile/" class="nav-item">
+                        <a href="/profile/" id="sidebarProfileLink" class="nav-item">
                             <img id="sidebarProfilePhoto"
                                  src="/public/images/default-profile.png"
                                  alt="Profile"
@@ -162,7 +162,7 @@
 
                     <div class="profile-identity-row">
                         <div class="profile-avatar-wrapper">
-                            <img src="/uploads/profiles/pp1.jpg" alt="Alsancak" class="profile-avatar-img">
+                            <img id="profileAvatarImg" src="/public/images/default-profile.png" alt="Profile Avatar" class="profile-avatar-img">
                         </div>
                         <div class="profile-actions">
                             <button class="edit-profile-btn">Edit Profile</button>
@@ -171,15 +171,15 @@
 
                     <div class="profile-bio-section">
                         <div class="profile-name-line">
-                            <h1 class="profile-display-name">Alsancak</h1>
+                            <h1 id="profileDisplayName" class="profile-display-name">Loading...</h1>
                             <span class="profile-role-badge">Reader</span>
                         </div>
-                        <span class="profile-username">@Alsancakl</span>
+                        <span id="profileUsernameHandle" class="profile-username">@...</span>
 
                         <div class="profile-meta-list">
                             <span class="profile-meta-item">
                                 <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                Joined June 2026
+                                <span id="profileJoinedDate">Loading...</span>
                             </span>
                         </div>
 
@@ -395,5 +395,6 @@
     <script src="/public/js/index.js"></script>
     <script src="/public/js/auth-menu.js"></script>
     <script src="/public/js/create_post.js"></script>
+    <script src="/public/js/profile.js"></script>
 </body>
 </html>

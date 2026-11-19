@@ -29,7 +29,7 @@ CREATE TABLE `books` (
   `page_count` int NOT NULL,
   `book_cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`book_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'a','b',222,'uploads/book_cover/2d33ea5fbf4b47b78f5a5e19f6a34c7a.jpg'),(2,'p?rt','c?s',31,'uploads/book_cover/eafa90a0243d4be68945be16f02f2a3d.jpg'),(3,'deneme','denemeci',31,'uploads/book_cover/f767af958bf54e3e8494d6e9c00d83c9.jpg'),(4,'Suç ve Ceza','Fyodor Dostoevsky',600,'uploads/book_cover/8ab0f72f5690461096a3b2954c03ed41.jpg');
+INSERT INTO `books` VALUES (1,'a','b',222,'uploads/book_cover/2d33ea5fbf4b47b78f5a5e19f6a34c7a.jpg'),(2,'p?rt','c?s',31,'uploads/book_cover/eafa90a0243d4be68945be16f02f2a3d.jpg'),(3,'deneme','denemeci',31,'uploads/book_cover/f767af958bf54e3e8494d6e9c00d83c9.jpg'),(4,'Su? ve Ceza','Fyodor Dostoevsky',600,'uploads/book_cover/8ab0f72f5690461096a3b2954c03ed41.jpg'),(5,'zart','zort',9,'uploads/book_cover/689e19ffa8b14e3bbc52d1085a3916b4.jpg');
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,7 +59,7 @@ CREATE TABLE `login_sessions` (
   UNIQUE KEY `token_hash` (`token_hash`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `login_sessions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `login_sessions` (
 
 LOCK TABLES `login_sessions` WRITE;
 /*!40000 ALTER TABLE `login_sessions` DISABLE KEYS */;
-INSERT INTO `login_sessions` VALUES (1,1,'e38a0faa0769c46a6ddd2c59092b5bc2c70d490182e9d14ef481a144851e2f30','2026-11-23 10:09:07','2026-11-16 10:09:07'),(2,1,'dd6f28173e57e697544bde0c5c8fa1145c3fdf288bbaf0765a784ec06eeeaf6b','2026-11-23 10:26:34','2026-11-16 10:26:33');
+INSERT INTO `login_sessions` VALUES (1,1,'e38a0faa0769c46a6ddd2c59092b5bc2c70d490182e9d14ef481a144851e2f30','2026-11-23 10:09:07','2026-11-16 10:09:07'),(2,1,'dd6f28173e57e697544bde0c5c8fa1145c3fdf288bbaf0765a784ec06eeeaf6b','2026-11-23 10:26:34','2026-11-16 10:26:33'),(34,6,'5199ca5075270a4e31096d0d5947c204b2cf4a143cb5be90992cd7f222a21a31','2026-11-25 19:48:30','2026-11-18 19:48:29');
 /*!40000 ALTER TABLE `login_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +91,7 @@ CREATE TABLE `posts` (
   KEY `fk_posts_user_book` (`user_book_id`),
   CONSTRAINT `fk_posts_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_posts_user_book` FOREIGN KEY (`user_book_id`) REFERENCES `user_books` (`user_book_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +100,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (1,3,1,'Added a by b to my reading list!','2026-11-18 13:21:08','reading'),(2,3,2,'Started reading p?rt by c?s!','2026-11-18 13:25:04','reading'),(3,3,3,'Finished reading deneme by denemeci in 100 days!','2026-11-18 13:25:58','reading'),(4,2,4,'Finished reading Suç ve Ceza by Fyodor Dostoevsky in 12 days!','2026-11-18 15:11:17','reading');
+INSERT INTO `posts` VALUES (1,3,1,'Added a by b to my reading list!','2026-11-18 13:21:08','reading'),(2,3,2,'Started reading p?rt by c?s!','2026-11-18 13:25:04','reading'),(3,3,3,'Finished reading deneme by denemeci in 100 days!','2026-11-18 13:25:58','reading'),(4,2,4,'Finished reading Su? ve Ceza by Fyodor Dostoevsky in 12 days!','2026-11-18 15:11:17','reading'),(5,5,5,'Stopped reading zart by zort.','2026-11-18 19:13:28','reading');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,7 +125,7 @@ CREATE TABLE `user_books` (
   KEY `fk_user_books_book` (`book_id`),
   CONSTRAINT `fk_user_books_book` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_user_books_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `user_books` (
 
 LOCK TABLES `user_books` WRITE;
 /*!40000 ALTER TABLE `user_books` DISABLE KEYS */;
-INSERT INTO `user_books` VALUES (1,3,1,'want_to_read',0,NULL,NULL,0),(2,3,2,'reading',20,'2026-11-18',NULL,0),(3,3,3,'finished',31,'2026-08-11','2026-11-18',100),(4,2,4,'finished',600,'2026-11-07','2026-11-18',12);
+INSERT INTO `user_books` VALUES (1,3,1,'want_to_read',0,NULL,NULL,0),(2,3,2,'reading',20,'2026-11-18',NULL,0),(3,3,3,'finished',31,'2026-08-11','2026-11-18',100),(4,2,4,'finished',600,'2026-11-07','2026-11-18',12),(5,5,5,'dropped',0,NULL,NULL,0);
 /*!40000 ALTER TABLE `user_books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,7 +155,7 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,7 +164,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'MrTerece','sha256$b29068e1c7ea2d98d8969e4fc0e2f6f1$41df2b87fafb12fdb3641e3a826ad44b469bc93168f4845736d5bf07e10ae182','male','2005-06-13','uploads/profiles/913534aebd6b49259fa8a25427271324.jpeg','2026-11-16 10:06:12'),(2,'Alsancak','sha256$30ebe72a6bb313bdae39dc96430508f8$32a25b43f81550da16484287b056824125b7f444de6829ce5c6f91969b4e0fd8','male','2005-07-12','uploads/profiles/9d9ac449faac4858bd01a4daa80c29cd.jpg','2026-11-16 17:57:08'),(3,'clawdee','sha256$858ca962e88ba9464e9810b02a4ec9b3$44e49102a41fddd730260a7574f8b52bd4838adbe7506b0a8e48879b2bf46466','female','2005-10-20','uploads/profiles/b8da655c14b94ea1a603d5f096d66717.jpg','2026-11-18 11:35:28');
+INSERT INTO `users` VALUES (1,'MrTerece','sha256$b29068e1c7ea2d98d8969e4fc0e2f6f1$41df2b87fafb12fdb3641e3a826ad44b469bc93168f4845736d5bf07e10ae182','male','2005-06-13','uploads/profiles/913534aebd6b49259fa8a25427271324.jpeg','2026-11-16 10:06:12'),(2,'Alsancak','sha256$30ebe72a6bb313bdae39dc96430508f8$32a25b43f81550da16484287b056824125b7f444de6829ce5c6f91969b4e0fd8','male','2005-07-12','uploads/profiles/9d9ac449faac4858bd01a4daa80c29cd.jpg','2026-11-16 17:57:08'),(3,'clawdee','sha256$858ca962e88ba9464e9810b02a4ec9b3$44e49102a41fddd730260a7574f8b52bd4838adbe7506b0a8e48879b2bf46466','female','2005-10-20','uploads/profiles/b8da655c14b94ea1a603d5f096d66717.jpg','2026-11-18 11:35:28'),(5,'beyza','sha256$57f31ff688f7d888128ed81ba9e3e574$8c5aa810a1382e4a4c0eb1598fce83589ecc4f2afcec340549350c5895b8f21a','female','2005-06-04','uploads/profiles/7f318da8c6e74c3dac943b71df62145a.jpg','2026-11-18 19:12:14'),(6,'lily','sha256$3a9147cdd2b33d65d3faa1bb1a4e643c$0b16871d358c30649d2661404929792ff30ceed85c25d7c932c4ae0586a4146b','female','2005-06-04','uploads/profiles/92007f36927349ec96048a8fdfd553a1.jpg','2026-11-18 19:48:23'),(7,'testuser','sha256$f80391acf93f5d23864d0d09da8353de$bb6eb6695c575bbf856306af1af4118276e19dee3f18caae1fca3c1a2979cd29','male','2005-05-15','uploads/profiles/78778991da3f4a61854886c1c2e3227f.jpg','2026-11-19 17:20:07');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -177,4 +177,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-18 18:15:54
+-- Dump completed on 2026-11-19 20:35:47

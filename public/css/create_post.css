@@ -349,6 +349,10 @@
     background-color: #ead9cc;
     color: #654b3c;
 }
+#readModal input[type="file"]::file-selector-button:hover {
+    background-color: #e2c1af;
+}
+
 
 #readModal #currentPageGroup,
 #readModal #durationGroup {

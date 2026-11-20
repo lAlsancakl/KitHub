@@ -23,7 +23,7 @@ async def read_signup(request: Request):
     with open("public/views/signup.html", "r", encoding="utf-8") as f:
         return f.read()
 
-@router.get("/profile/", response_class=HTMLResponse)
-async def read_profile(request: Request):
+@router.get("/profile/{username}", response_class=HTMLResponse)
+async def read_user_profile(request: Request, username: str):
     with open("public/views/profile.html", "r", encoding="utf-8") as f:
         return f.read()

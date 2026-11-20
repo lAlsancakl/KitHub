@@ -133,3 +133,73 @@
         max-height: 92vh;
     }
 }
+
+body[data-theme="dark"] #reviewModal .kithub-modal-box {
+    background-color: #1b1e28;
+    border-color: #393944;
+    color: #f2e9e5;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+body[data-theme="dark"] #reviewModal .kithub-modal-header {
+    background: linear-gradient(135deg, #292631, #24232d);
+    border-bottom-color: #393944;
+}
+
+body[data-theme="dark"] #reviewModal .kithub-modal-header h3,
+body[data-theme="dark"] #reviewModal .kithub-modal-body,
+body[data-theme="dark"] #reviewModal label {
+    color: #f2e9e5;
+}
+
+body[data-theme="dark"] #reviewModal input,
+body[data-theme="dark"] #reviewModal select,
+body[data-theme="dark"] #reviewModal textarea {
+    background-color: #151820;
+    border-color: #41404b;
+    color: #f2e9e5;
+}
+
+body[data-theme="dark"] #reviewModal input:focus,
+body[data-theme="dark"] #reviewModal select:focus,
+body[data-theme="dark"] #reviewModal textarea:focus {
+    border-color: #d8958d;
+    box-shadow: 0 0 0 3px rgba(216, 149, 141, 0.18);
+}
+
+body[data-theme="dark"] #reviewModal .review-book-preview {
+    background-color: #22232d;
+    border-color: #393944;
+}
+
+body[data-theme="dark"] #reviewModal .review-book-preview h4 {
+    color: #f2e9e5;
+}
+
+body[data-theme="dark"] #reviewModal .review-book-preview p,
+body[data-theme="dark"] #reviewModal .review-char-count {
+    color: #b6a8a2;
+}
+
+body[data-theme="dark"] #reviewModal .review-spoiler input {
+    accent-color: #d8958d;
+}
+
+body[data-theme="dark"] #reviewModal .review-submit-btn {
+    background-color: #d8958d;
+    color: #261b1c;
+}
+
+body[data-theme="dark"] #reviewModal .review-submit-btn:hover {
+    background-color: #e7aaa1;
+    box-shadow: 0 6px 18px rgba(216, 149, 141, 0.22);
+}
+
+body[data-theme="dark"] #reviewModal .modal-close-btn {
+    color: #c4b5b0;
+}
+
+body[data-theme="dark"] #reviewModal .modal-close-btn:hover {
+    background-color: #3a2b32;
+    color: #f0b2a8;
+}

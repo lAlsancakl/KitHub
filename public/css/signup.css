@@ -111,7 +111,7 @@
 .submit-btn {
     margin-top: 8px;
     padding: 13px;
-    background-color: #a9785e;
+    background-color: var(--accent);
     color: #ffffff;
     border: none;
     border-radius: 12px;

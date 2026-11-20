@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", async () => {
     const parts = window.location.pathname.split("/").filter(Boolean);
     const username = parts[0] === "profile" && parts[1]
@@ -6,6 +5,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         : null;
 
     if (!username) return;
+
+    const bannerEl = document.getElementById("profileBannerImg");
+    const editBannerBtn = document.getElementById("editProfileBannerBtn");
+    const bannerInputEl = document.getElementById("bannerFileInput");
 
     const avatarEl = document.getElementById("profileAvatarImg");
     const displayNameEl = document.getElementById("profileDisplayName");
@@ -25,8 +28,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         })[char]);
     }
 
+    function normalizeMediaUrl(url, fallback) {
+        if (!url) return fallback;
+        return url.startsWith("/") ? url : `/${url}`;
+    }
+
     function getCover(url) {
-        return url || "/public/images/default-profile.png";
+        return normalizeMediaUrl(url, "/public/images/default-profile.png");
+    }
+
+    function setBannerImage(url, bustCache = false) {
+        if (!bannerEl) return;
+        const cleanUrl = normalizeMediaUrl(url, "/public/images/background.jpg");
+        bannerEl.src = bustCache ? `${cleanUrl}?t=${Date.now()}` : cleanUrl;
+        bannerEl.alt = `${username} Banner`;
     }
 
     function updateTabs(booksRead, reviewsCount) {
@@ -80,7 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    function renderActivities(activities, username, profilePhoto) {
+    function renderActivities(activities, profileUsername, profilePhoto) {
         if (!activityList) return;
 
         activityList.innerHTML = "";
@@ -103,48 +118,46 @@ document.addEventListener("DOMContentLoaded", async () => {
             const readingDays = Number(post.reading_days) || 0;
             const currentPage = Number(post.current_page) || 0;
 
-            
-let stats = "";
+            let stats = "";
 
-const pageIcon = `
-    <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-    </svg>
-`;
+            const pageIcon = `
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+            `;
 
-const clockIcon = `
-    <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
-    </svg>
-`;
+            const clockIcon = `
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            `;
 
-const checkIcon = `
-    <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2">
-        <polyline points="20 6 9 17 4 12"/>
-    </svg>
-`;
+            const checkIcon = `
+                <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            `;
 
-if (isReview) {
-    stats = `
-        <span class="stat-item">${pageIcon}${pages} pages</span>
-        ${readingDays ? `<span class="stat-item">${clockIcon}Read in ${readingDays} days</span>` : ""}
-    `;
-} else {
-    stats = `
-        <span class="stat-item">${pageIcon}${pages} pages</span>
-        <span class="stat-item">${post.status === "finished" ? checkIcon : clockIcon}${escapeHTML(post.status || "Reading")}</span>
-        ${readingDays ? `<span class="stat-item">${clockIcon}Read in ${readingDays} days</span>` : ""}
-        ${post.status === "reading" ? `<span class="stat-item">${pageIcon}Page ${currentPage}</span>` : ""}
-    `;
-}
-
+            if (isReview) {
+                stats = `
+                    <span class="stat-item">${pageIcon}${pages} pages</span>
+                    ${readingDays ? `<span class="stat-item">${clockIcon}Read in ${readingDays} days</span>` : ""}
+                `;
+            } else {
+                stats = `
+                    <span class="stat-item">${pageIcon}${pages} pages</span>
+                    <span class="stat-item">${post.status === "finished" ? checkIcon : clockIcon}${escapeHTML(post.status || "Reading")}</span>
+                    ${readingDays ? `<span class="stat-item">${clockIcon}Read in ${readingDays} days</span>` : ""}
+                    ${post.status === "reading" ? `<span class="stat-item">${pageIcon}Page ${currentPage}</span>` : ""}
+                `;
+            }
 
             activityList.insertAdjacentHTML("beforeend", `
                 <article class="post-card" data-type="${type}">
@@ -154,14 +167,14 @@ if (isReview) {
                              class="user-avatar">
 
                         <div class="user-meta">
-                            <span class="user-name">${escapeHTML(username)}</span>
-                            <span class="post-info-text">@${escapeHTML(username)}</span>
+                            <span class="user-name">${escapeHTML(profileUsername)}</span>
+                            <span class="post-info-text">@${escapeHTML(profileUsername)}</span>
                         </div>
                     </div>
 
                     ${isReview ? "" : `
                         <div class="post-action-desc">
-                            <strong>${escapeHTML(username)}</strong>
+                            <strong>${escapeHTML(profileUsername)}</strong>
                             ${post.status === "finished" ? "finished reading a book" : "updated reading progress"}
                         </div>
                     `}
@@ -198,6 +211,50 @@ if (isReview) {
         });
     }
 
+    if (editBannerBtn && bannerInputEl) {
+        editBannerBtn.addEventListener("click", () => {
+            bannerInputEl.click();
+        });
+
+        bannerInputEl.addEventListener("change", async () => {
+            const file = bannerInputEl.files && bannerInputEl.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("banner_photo", file);
+
+            const originalText = editBannerBtn.textContent;
+            editBannerBtn.disabled = true;
+            editBannerBtn.textContent = "Uploading...";
+
+            try {
+                const uploadRes = await fetch(
+                    `/api/profile/${encodeURIComponent(username)}/banner`,
+                    {
+                        method: "POST",
+                        credentials: "same-origin",
+                        body: formData
+                    }
+                );
+
+                const uploadData = await uploadRes.json();
+                if (!uploadRes.ok) {
+                    throw new Error(uploadData.detail || uploadData.message || "Banner upload failed");
+                }
+
+                const savedBanner = uploadData.banner_photo || uploadData.banner_url;
+                setBannerImage(savedBanner, true);
+            } catch (err) {
+                console.error("Banner upload error:", err);
+                alert(err.message || "Arka plan resmi güncellenemedi.");
+            } finally {
+                editBannerBtn.disabled = false;
+                editBannerBtn.textContent = originalText;
+                bannerInputEl.value = "";
+            }
+        });
+    }
+
     try {
         const res = await fetch(`/api/profile/${encodeURIComponent(username)}`, {
             credentials: "same-origin",
@@ -210,6 +267,7 @@ if (isReview) {
             if (handleEl) handleEl.textContent = `@${username}`;
             if (joinedEl) joinedEl.textContent = "";
             if (avatarEl) avatarEl.src = "/public/images/default-profile.png";
+            setBannerImage("/public/images/background.jpg", false);
             return;
         }
 
@@ -218,9 +276,11 @@ if (isReview) {
         document.title = `KitHub - ${data.username} (@${data.username})`;
 
         if (avatarEl) {
-            avatarEl.src = data.profile_photo || "/public/images/default-profile.png";
+            avatarEl.src = normalizeMediaUrl(data.profile_photo, "/public/images/default-profile.png");
             avatarEl.alt = data.username;
         }
+
+        setBannerImage(data.banner_photo, false);
 
         if (displayNameEl) displayNameEl.textContent = data.username;
         if (handleEl) handleEl.textContent = `@${data.username}`;

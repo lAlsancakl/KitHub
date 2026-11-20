@@ -155,7 +155,7 @@
                 <!-- PROFILE HEADER CARD -->
                 <section class="profile-header-card">
                     <div class="profile-banner">
-                        <img src="/public/images/background.jpg" alt="Profile Banner" class="profile-banner-img">
+                        <img id="profileBannerImg" src="" alt="Profile Banner" class="profile-banner-img">
                         <a href="/" class="banner-back-btn" title="Back to Feed">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                         </a>
@@ -166,7 +166,8 @@
                             <img id="profileAvatarImg" src="/public/images/default-profile.png" alt="Profile Avatar" class="profile-avatar-img">
                         </div>
                         <div class="profile-actions">
-                            <button class="edit-profile-btn">Edit Profile</button>
+                            <button type="button" class="edit-profile-btn" id="editProfileBannerBtn">Edit Profile</button>
+                            <input type="file" id="bannerFileInput" name="banner_photo" accept="image/*" hidden>
                         </div>
                     </div>
 
@@ -437,6 +438,7 @@
             });
         });
     </script>
+
 
     <!-- JS SCRIPTS -->
     <script src="/public/js/index.js"></script>

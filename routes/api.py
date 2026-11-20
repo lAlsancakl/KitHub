@@ -21,6 +21,22 @@ router = APIRouter()
 UPLOAD_DIR = Path("uploads/profiles")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
+BANNER_UPLOAD_DIR = Path("uploads/banners")
+BANNER_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+MAX_IMAGE_SIZE = 5 * 1024 * 1024
+DEFAULT_BANNER_URL = "/public/images/background.jpg"
+
+
+def format_media_url(path_value: Optional[str], fallback: str = "") -> str:
+    if not path_value:
+        return fallback
+    cleaned = path_value.strip()
+    if cleaned.startswith(("http://", "https://", "/")):
+        return cleaned
+    return f"/{cleaned.lstrip('/')}"
+
 
 @router.post("/register")
 async def register_user(
@@ -46,12 +62,12 @@ async def register_user(
 
             extension = Path(profile_photo.filename).suffix.lower()
 
-            if extension not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
+            if extension not in ALLOWED_IMAGE_EXTENSIONS:
                 raise HTTPException(status_code=400, detail="Unsupported image format.")
 
             photo_data = await profile_photo.read()
 
-            if len(photo_data) > 5 * 1024 * 1024:
+            if len(photo_data) > MAX_IMAGE_SIZE:
                 raise HTTPException(status_code=400, detail="Image must be smaller than 5 MB.")
 
             filename = f"{uuid.uuid4().hex}{extension}"
@@ -115,7 +131,7 @@ def login(
 ):
     user = db.execute(
         text("""
-            SELECT user_id, username, password_hash, profile_photo
+            SELECT user_id, username, password_hash, profile_photo, banner_photo
             FROM users
             WHERE username = :username
         """),
@@ -215,6 +231,7 @@ def logout(request: Request, db: Session = Depends(get_db)):
 
     return response
 
+
 @router.post("/save-reading")
 async def save_reading(
     request: Request,
@@ -223,8 +240,8 @@ async def save_reading(
     totalPages: int = Form(...),
     readingStatus: str = Form(...),
     bookCover: UploadFile = File(...),
-    currentPage: Optional[int] = Form(0),       # Optional yaptık
-    readingDuration: Optional[int] = Form(None), # Optional yaptık
+    currentPage: Optional[int] = Form(0),
+    readingDuration: Optional[int] = Form(None),
     db: Session = Depends(get_db)
 ):
     user = get_current_user(request, db)
@@ -254,12 +271,12 @@ async def save_reading(
 
         extension = Path(bookCover.filename).suffix.lower()
 
-        if extension not in [".jpg", ".jpeg", ".png", ".webp", ".gif"]:
+        if extension not in ALLOWED_IMAGE_EXTENSIONS:
             raise HTTPException(status_code=400, detail="Unsupported image format.")
 
         cover_data = await bookCover.read()
 
-        if len(cover_data) > 5 * 1024 * 1024:
+        if len(cover_data) > MAX_IMAGE_SIZE:
             raise HTTPException(status_code=400, detail="Image must be smaller than 5 MB.")
 
         # Check if the book already exists
@@ -431,7 +448,7 @@ async def save_reading(
 def get_user_profile(username: str, db: Session = Depends(get_db)):
     user = db.execute(
         text("""
-            SELECT user_id, username, profile_photo, created_at
+            SELECT user_id, username, profile_photo, banner_photo, created_at
             FROM users
             WHERE LOWER(username) = LOWER(:username)
             LIMIT 1
@@ -450,10 +467,13 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
         if created_at else "Joined recently"
     )
 
-    photo_url = (
-        "/" + user["profile_photo"].lstrip("/")
-        if user["profile_photo"]
-        else "/public/images/default-profile.png"
+    photo_url = format_media_url(
+        user["profile_photo"],
+        "/public/images/default-profile.png"
+    )
+    banner_url = format_media_url(
+        user["banner_photo"],
+        DEFAULT_BANNER_URL
     )
 
     # Get profile counts
@@ -526,6 +546,7 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
         "user_id": user_id,
         "username": user["username"],
         "profile_photo": photo_url,
+        "banner_photo": banner_url,
         "created_at": created_at.isoformat() if created_at else None,
         "joined_text": joined_text,
         "books_read": books_read or 0,
@@ -536,10 +557,7 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
                 "book_id": book["book_id"],
                 "title": book["title"],
                 "author": book["author"],
-                "cover": (
-                    "/" + book["book_cover"].lstrip("/")
-                    if book["book_cover"] else ""
-                ),
+                "cover": format_media_url(book["book_cover"], ""),
                 "page_count": book["page_count"],
                 "current_page": book["current_page"]
             }
@@ -556,10 +574,7 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
                 "book_id": post["book_id"],
                 "book_title": post["book_title"],
                 "author": post["author"],
-                "cover": (
-                    "/" + post["book_cover"].lstrip("/")
-                    if post["book_cover"] else ""
-                ),
+                "cover": format_media_url(post["book_cover"], ""),
                 "page_count": post["page_count"],
                 "status": post["status"],
                 "current_page": post["current_page"],
@@ -569,9 +584,19 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
         ]
     }
 
-    user = db.execute(
+
+@router.post("/api/profile/{username}/banner")
+async def update_profile_banner(
+    username: str,
+    request: Request,
+    banner_photo: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    current_user = get_current_user(request, db)
+
+    target_user = db.execute(
         text("""
-            SELECT user_id, username, profile_photo, created_at
+            SELECT user_id, username, banner_photo
             FROM users
             WHERE LOWER(username) = LOWER(:username)
             LIMIT 1
@@ -579,26 +604,66 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
         {"username": username.strip()}
     ).mappings().first()
 
-    if not user:
+    if not target_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    created_at = user["created_at"]
-    joined_text = (
-        f"Joined {created_at.strftime('%B %Y')}"
-        if created_at else "Joined recently"
-    )
+    if target_user["user_id"] != current_user["user_id"]:
+        raise HTTPException(status_code=403, detail="You can only edit your own profile banner.")
 
-    photo_url = (
-        "/" + user["profile_photo"].lstrip("/")
-        if user["profile_photo"] else "/public/images/default-profile.png"
-    )
+    if not banner_photo or not banner_photo.filename:
+        raise HTTPException(status_code=400, detail="Please select a banner image.")
+
+    if not banner_photo.content_type or not banner_photo.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Please upload an image.")
+
+    extension = Path(banner_photo.filename).suffix.lower()
+    if extension not in ALLOWED_IMAGE_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Unsupported image format.")
+
+    banner_data = await banner_photo.read()
+    if len(banner_data) > MAX_IMAGE_SIZE:
+        raise HTTPException(status_code=400, detail="Image must be smaller than 5 MB.")
+
+    filename = f"{uuid.uuid4().hex}{extension}"
+    banner_path = BANNER_UPLOAD_DIR / filename
+    saved_banner = f"uploads/banners/{filename}"
+    old_banner = target_user["banner_photo"]
+
+    try:
+        with open(banner_path, "wb") as f:
+            f.write(banner_data)
+
+        db.execute(
+            text("""
+                UPDATE users
+                SET banner_photo = :banner_photo
+                WHERE user_id = :user_id
+            """),
+            {
+                "banner_photo": saved_banner,
+                "user_id": target_user["user_id"]
+            }
+        )
+        db.commit()
+
+    except Exception:
+        db.rollback()
+        if os.path.exists(banner_path):
+            os.remove(banner_path)
+        raise
+
+    if old_banner:
+        normalized_old = old_banner.lstrip("/")
+        if normalized_old.startswith("uploads/banners/") and normalized_old != saved_banner:
+            if os.path.exists(normalized_old):
+                try:
+                    os.remove(normalized_old)
+                except OSError:
+                    pass
 
     return {
-        "user_id": user["user_id"],
-        "username": user["username"],
-        "profile_photo": photo_url,
-        "created_at": created_at.isoformat() if created_at else None,
-        "joined_text": joined_text
+        "message": "Banner updated successfully!",
+        "banner_photo": f"/{saved_banner}"
     }
 
 
@@ -607,10 +672,8 @@ def get_review_books(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    # 1. Token'dan giriş yapan kullanıcıyı bul.
     user = get_current_user(request, db)
 
-    # 2. Kullanıcının bitirdiği kitapları MySQL'den al.
     books = db.execute(
         text("""
             SELECT
@@ -627,20 +690,16 @@ def get_review_books(
         {"user_id": user["user_id"]}
     ).mappings().all()
 
-    # 3. Kitapları JavaScript'e JSON olarak gönder.
     return [
         {
             "id": book["book_id"],
             "title": book["title"],
             "author": book["author"],
-            "cover": (
-                "/" + book["book_cover"].lstrip("/")
-                if book["book_cover"]
-                else ""
-            )
+            "cover": format_media_url(book["book_cover"], "")
         }
         for book in books
     ]
+
 
 class ReviewCreate(BaseModel):
     book_id: int
@@ -655,13 +714,11 @@ def create_review(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    # Token üzerinden giriş yapan kullanıcıyı buluyoruz
     user = get_current_user(request, db)
 
     title = review.title.strip()
     content = review.content.strip()
 
-    # Boş veya çok uzun yorumları engelliyoruz
     if not title or len(title) > 255:
         raise HTTPException(
             status_code=400,
@@ -674,7 +731,6 @@ def create_review(
             detail="Review must be 1-2000 characters."
         )
 
-    # Kullanıcı bu kitabı gerçekten bitirmiş mi?
     user_book = db.execute(
         text("""
             SELECT user_book_id
@@ -695,7 +751,6 @@ def create_review(
             detail="You can only review books you have finished."
         )
 
-    # Yorumu MySQL'e kaydediyoruz
     try:
         result = db.execute(
             text("""

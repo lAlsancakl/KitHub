@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const bookSelect = document.getElementById("reviewBook");
@@ -8,32 +7,62 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = document.getElementById("reviewContent");
     const charCount = document.getElementById("reviewCharCount");
 
-    // Örnek kitaplar - API bağlantısı yapılana kadar
-    // test amacıyla kullanılacak.
-    const savedBooks = [
-        {
-            id: 1,
-            title: "Şüpheli",
-            author: "Keigo Higashino",
-            cover: "/uploads/book_cover/supheli.jpg"
-        },
-        {
-            id: 2,
-            title: "Şüpheli X",
-            author: "Keigo Higashino",
-            cover: "/uploads/book_cover/supheli.jpg"
+    let savedBooks = [];
+
+    async function loadReviewBooks() {
+        const message = document.getElementById("reviewMessage");
+
+        bookSelect.innerHTML =
+            '<option value="">Select a book</option>';
+
+        bookSelect.disabled = true;
+        preview.style.display = "none";
+
+        savedBooks = [];
+
+        try {
+            const response = await fetch("/api/review-books", {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
+            });
+
+            if (response.status === 401) {
+                throw new Error("Please log in first.");
+            }
+
+            if (!response.ok) {
+                throw new Error("Could not load your books.");
+            }
+
+            savedBooks = await response.json();
+
+            if (savedBooks.length === 0) {
+                message.textContent =
+                    "You have no finished books yet.";
+                return;
+            }
+
+            message.textContent = "";
+
+            savedBooks.forEach(book => {
+                const option = document.createElement("option");
+
+                option.value = book.id;
+                option.textContent = book.title;
+
+                bookSelect.appendChild(option);
+            });
+
+            bookSelect.disabled = false;
+
+        } catch (error) {
+            console.error("Review books error:", error);
+            message.textContent = error.message;
         }
-    ];
+    }
 
-    // Kitapları dropdown'a ekle
-    savedBooks.forEach(book => {
-        const option = document.createElement("option");
-
-        option.value = book.id;
-        option.textContent = book.title;
-
-        bookSelect.appendChild(option);
-    });
+    loadReviewBooks();
 
     // Kitap seçildiğinde bilgilerini göster
     bookSelect.addEventListener("change", () => {
@@ -59,8 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Form gönderimi (şimdilik sadece frontend)
-    reviewForm.addEventListener("submit", (e) => {
 
+    // Review'u backend'e gönderiyoruz
+    reviewForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const message = document.getElementById("reviewMessage");
@@ -71,28 +101,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const reviewData = {
-            book_id: bookSelect.value,
+            book_id: Number(bookSelect.value),
             title: document.getElementById("reviewTitle").value,
             content: content.value,
             spoiler: document.getElementById("reviewSpoiler").checked
         };
 
-        console.log("Review Data:", reviewData);
+        message.textContent = "Submitting review...";
 
-        message.textContent = "Your review has been created successfully!";
+        try {
+            const response = await fetch("/api/reviews", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "same-origin",
+                body: JSON.stringify(reviewData)
+            });
 
-        reviewForm.reset();
+            const result = await response.json();
 
-        charCount.textContent = "0";
+            if (!response.ok) {
+                throw new Error(
+                    typeof result.detail === "string"
+                        ? result.detail
+                        : "Could not save review."
+                );
+            }
 
-        preview.style.display = "none";
+            message.textContent = "Review created successfully!";
 
-        setTimeout(() => {
-            document.getElementById("reviewModal").classList.remove("open");
-            document.body.style.overflow = "";
-            message.textContent = "";
-        }, 1200);
+            reviewForm.reset();
+            charCount.textContent = "0";
+            preview.style.display = "none";
 
+            setTimeout(() => {
+                document.getElementById("reviewModal")
+                    .classList.remove("open");
+
+                document.body.style.overflow = "";
+                message.textContent = "";
+            }, 1200);
+
+        } catch (error) {
+            console.error("Review error:", error);
+            message.textContent = error.message;
+        }
     });
 
 });

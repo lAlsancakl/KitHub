@@ -14,6 +14,7 @@ from typing import Optional
 
 from config.helpers import hash_password, verify_password, get_current_user
 from config.database import get_db
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -457,4 +458,130 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
         "profile_photo": photo_url,
         "created_at": created_at.isoformat() if created_at else None,
         "joined_text": joined_text
+    }
+
+
+@router.get("/api/review-books")
+def get_review_books(
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    # 1. Token'dan giriş yapan kullanıcıyı bul.
+    user = get_current_user(request, db)
+
+    # 2. Kullanıcının bitirdiği kitapları MySQL'den al.
+    books = db.execute(
+        text("""
+            SELECT
+                b.book_id,
+                b.title,
+                b.author,
+                b.book_cover
+            FROM user_books ub
+            JOIN books b ON ub.book_id = b.book_id
+            WHERE ub.user_id = :user_id
+              AND ub.status = 'finished'
+            ORDER BY b.title
+        """),
+        {"user_id": user["user_id"]}
+    ).mappings().all()
+
+    # 3. Kitapları JavaScript'e JSON olarak gönder.
+    return [
+        {
+            "id": book["book_id"],
+            "title": book["title"],
+            "author": book["author"],
+            "cover": (
+                "/" + book["book_cover"].lstrip("/")
+                if book["book_cover"]
+                else ""
+            )
+        }
+        for book in books
+    ]
+
+class ReviewCreate(BaseModel):
+    book_id: int
+    title: str
+    content: str
+    spoiler: bool = False
+
+
+@router.post("/api/reviews", status_code=201)
+def create_review(
+    review: ReviewCreate,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    # Token üzerinden giriş yapan kullanıcıyı buluyoruz
+    user = get_current_user(request, db)
+
+    title = review.title.strip()
+    content = review.content.strip()
+
+    # Boş veya çok uzun yorumları engelliyoruz
+    if not title or len(title) > 255:
+        raise HTTPException(
+            status_code=400,
+            detail="Review title must be 1-255 characters."
+        )
+
+    if not content or len(content) > 2000:
+        raise HTTPException(
+            status_code=400,
+            detail="Review must be 1-2000 characters."
+        )
+
+    # Kullanıcı bu kitabı gerçekten bitirmiş mi?
+    user_book = db.execute(
+        text("""
+            SELECT user_book_id
+            FROM user_books
+            WHERE user_id = :user_id
+              AND book_id = :book_id
+              AND status = 'finished'
+        """),
+        {
+            "user_id": user["user_id"],
+            "book_id": review.book_id
+        }
+    ).mappings().first()
+
+    if not user_book:
+        raise HTTPException(
+            status_code=403,
+            detail="You can only review books you have finished."
+        )
+
+    # Yorumu MySQL'e kaydediyoruz
+    try:
+        result = db.execute(
+            text("""
+                INSERT INTO posts
+                    (user_id, user_book_id, post_title,
+                     content, post_type, is_spoiler)
+                VALUES
+                    (:user_id, :user_book_id, :title,
+                     :content, 'review', :spoiler)
+            """),
+            {
+                "user_id": user["user_id"],
+                "user_book_id": user_book["user_book_id"],
+                "title": title,
+                "content": content,
+                "spoiler": review.spoiler
+            }
+        )
+
+        post_id = result.lastrowid
+        db.commit()
+
+    except Exception:
+        db.rollback()
+        raise
+
+    return {
+        "message": "Review created successfully!",
+        "post_id": post_id
     }

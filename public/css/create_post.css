@@ -361,7 +361,7 @@
 }
 
 #readModal button[type="submit"] {
-    background-color: #a9785e;
+    background-color: var(--accent);
     color: #ffffff;
 }
 

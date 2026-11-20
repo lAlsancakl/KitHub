@@ -100,7 +100,7 @@
     padding: 13px;
     border: none;
     border-radius: 11px;
-    background-color: #a9785e;
+    background-color: var(--accent);
     color: white;
     font-size: 15px;
     font-weight: 700;

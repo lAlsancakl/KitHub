@@ -92,8 +92,8 @@
 }
 
 .file-input::file-selector-button {
-    background-color: #dbe4ff;
-    color: #182346;
+    background-color: #ead9cc;
+    color: #654b3c;
     border: none;
     padding: 6px 12px;
     border-radius: 8px;
@@ -104,14 +104,14 @@
 }
 
 .file-input::file-selector-button:hover {
-    background-color: #bac8ff;
+    background-color: #e2c1af;
 }
 
 /* Kayıt Ol Butonu */
 .submit-btn {
     margin-top: 8px;
     padding: 13px;
-    background-color: #3b5bdb;
+    background-color: #a9785e;
     color: #ffffff;
     border: none;
     border-radius: 12px;
@@ -122,7 +122,7 @@
 }
 
 .submit-btn:hover {
-    background-color: #364fc7;
+    background-color: #654b3c;
 }
 
 .auth-footer {
@@ -133,7 +133,7 @@
 }
 
 .auth-footer a {
-    color: #3b5bdb;
+    color: #a9785e;
     font-weight: 600;
     text-decoration: none;
 }

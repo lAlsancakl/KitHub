@@ -426,8 +426,149 @@ async def save_reading(
 
         raise
 
+
 @router.get("/api/profile/{username}")
 def get_user_profile(username: str, db: Session = Depends(get_db)):
+    user = db.execute(
+        text("""
+            SELECT user_id, username, profile_photo, created_at
+            FROM users
+            WHERE LOWER(username) = LOWER(:username)
+            LIMIT 1
+        """),
+        {"username": username.strip()}
+    ).mappings().first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user_id = user["user_id"]
+
+    created_at = user["created_at"]
+    joined_text = (
+        f"Joined {created_at.strftime('%B %Y')}"
+        if created_at else "Joined recently"
+    )
+
+    photo_url = (
+        "/" + user["profile_photo"].lstrip("/")
+        if user["profile_photo"]
+        else "/public/images/default-profile.png"
+    )
+
+    # Get profile counts
+    books_read = db.execute(
+        text("""
+            SELECT COUNT(*) AS total
+            FROM user_books
+            WHERE user_id = :user_id
+              AND status = 'finished'
+        """),
+        {"user_id": user_id}
+    ).scalar()
+
+    reviews_count = db.execute(
+        text("""
+            SELECT COUNT(*) AS total
+            FROM posts
+            WHERE user_id = :user_id
+              AND post_type = 'review'
+        """),
+        {"user_id": user_id}
+    ).scalar()
+
+    # Get currently reading books
+    reading_books = db.execute(
+        text("""
+            SELECT
+                b.book_id,
+                b.title,
+                b.author,
+                b.book_cover,
+                b.page_count,
+                ub.current_page
+            FROM user_books ub
+            JOIN books b ON ub.book_id = b.book_id
+            WHERE ub.user_id = :user_id
+              AND ub.status = 'reading'
+            ORDER BY ub.user_book_id DESC
+        """),
+        {"user_id": user_id}
+    ).mappings().all()
+
+    # Get profile activities
+    activities = db.execute(
+        text("""
+            SELECT
+                p.post_id,
+                p.post_type,
+                p.post_title,
+                p.content,
+                p.is_spoiler,
+                b.book_id,
+                b.title AS book_title,
+                b.author,
+                b.book_cover,
+                b.page_count,
+                ub.status,
+                ub.current_page,
+                ub.reading_days
+            FROM posts p
+            JOIN user_books ub ON p.user_book_id = ub.user_book_id
+            JOIN books b ON ub.book_id = b.book_id
+            WHERE p.user_id = :user_id
+            ORDER BY p.post_id DESC
+        """),
+        {"user_id": user_id}
+    ).mappings().all()
+
+    return {
+        "user_id": user_id,
+        "username": user["username"],
+        "profile_photo": photo_url,
+        "created_at": created_at.isoformat() if created_at else None,
+        "joined_text": joined_text,
+        "books_read": books_read or 0,
+        "reviews_count": reviews_count or 0,
+
+        "currently_reading": [
+            {
+                "book_id": book["book_id"],
+                "title": book["title"],
+                "author": book["author"],
+                "cover": (
+                    "/" + book["book_cover"].lstrip("/")
+                    if book["book_cover"] else ""
+                ),
+                "page_count": book["page_count"],
+                "current_page": book["current_page"]
+            }
+            for book in reading_books
+        ],
+
+        "activities": [
+            {
+                "post_id": post["post_id"],
+                "type": post["post_type"],
+                "title": post["post_title"],
+                "content": post["content"],
+                "spoiler": bool(post["is_spoiler"]),
+                "book_id": post["book_id"],
+                "book_title": post["book_title"],
+                "author": post["author"],
+                "cover": (
+                    "/" + post["book_cover"].lstrip("/")
+                    if post["book_cover"] else ""
+                ),
+                "page_count": post["page_count"],
+                "status": post["status"],
+                "current_page": post["current_page"],
+                "reading_days": post["reading_days"]
+            }
+            for post in activities
+        ]
+    }
+
     user = db.execute(
         text("""
             SELECT user_id, username, profile_photo, created_at

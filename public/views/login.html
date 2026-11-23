@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/public/css/main.css">
     <link rel="stylesheet" href="/public/css/create_post.css">
     <link rel="stylesheet" href="/public/css/login.css">
+    <link rel="stylesheet" href="/public/css/review.css">
 </head>
 
 <body>
@@ -115,13 +116,13 @@
                 </div>
 
                 <div id="userMenu" hidden>
-                    <a href="/profile/" class="nav-item">
+                    <a href="/profile/" id="sidebarProfileLink" class="nav-item">
                         <img id="sidebarProfilePhoto"
-                             src="/public/images/default-profile.png"
-                             alt="Profile"
-                             width="28"
-                             height="28"
-                             style="border-radius:50%; object-fit:cover; margin-left:-4px;">
+                            src="/public/images/default-profile.png"
+                            alt="Profile"
+                            width="28"
+                            height="28"
+                            style="border-radius:50%; object-fit:cover; margin-left:-4px;">
                         <span>Profile</span>
                     </a>
 
@@ -195,7 +196,7 @@
 
         <!-- SIDEBAR FOOTER -->
         <div class="sidebar-footer">
-            <button class="theme-toggle-btn" title="Toggle Theme">
+            <button type="button" class="theme-toggle-btn" title="Gece moduna geç" aria-label="Gece moduna geç" aria-pressed="false">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="4"/>
                     <path d="M12 2v2"/>
@@ -257,19 +258,65 @@
     <!-- RIGHT SIDEBAR -->
     <aside class="sidebar-right"></aside>
 
-    <!-- REVIEW MODAL -->
-    <div class="kithub-modal-overlay" id="reviewModal">
-        <div class="kithub-modal-box">
-            <div class="kithub-modal-header">
-                <h3>Create a Review</h3>
-                <button type="button" class="modal-close-btn" data-close="reviewModal">&times;</button>
-            </div>
-            <div class="kithub-modal-body">
-                asd
+    
+    <!-- MODAL 1: CREATE A REVIEW -->
+        <div class="kithub-modal-overlay" id="reviewModal">
+            <div class="kithub-modal-box">
+                <div class="kithub-modal-header">
+                    <h3>Create a Review</h3>
+                    <button type="button" class="modal-close-btn" data-close="reviewModal">&times;</button>
+                </div>
+                <div class="kithub-modal-body">
+                    <form id="reviewForm">
+
+                        <div class="form-group">
+                            <label for="reviewBook">Select Book</label>
+                            <select id="reviewBook" name="reviewBook" required>
+                                <option value="">Select a book</option>
+                            </select>
+                        </div>
+                    
+                        <div class="review-book-preview" id="reviewBookPreview">
+                            <img id="reviewCover" src="" alt="Book Cover">
+                            <div>
+                                <h4 id="reviewBookTitle"></h4>
+                                <p id="reviewBookAuthor"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reviewTitle">Review Title</label>
+                            <input type="text" id="reviewTitle"
+                                placeholder="Give your review a title" required>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="reviewContent">Your Review</label>
+                            <textarea id="reviewContent"
+                                    placeholder="Share your thoughts about this book..."
+                                    rows="6" maxlength="2000" required></textarea>
+                            <div class="review-char-count">
+                                <span id="reviewCharCount">0</span>/2000
+                            </div>
+                        </div>
+                    
+                        <div class="form-group review-spoiler">
+                            <label>
+                                <input type="checkbox" id="reviewSpoiler">
+                                This review contains spoilers
+                            </label>
+                        </div>
+                    
+                        <button type="submit" class="review-submit-btn">
+                            Submit Review
+                        </button>
+                    
+                    </form>
+                
+                    <div id="reviewMessage"></div>
+                </div>
             </div>
         </div>
-    </div>
-
     <!-- SAVE A READING MODAL -->
     <div class="kithub-modal-overlay" id="readModal">
         <div class="kithub-modal-box">
@@ -334,6 +381,7 @@
 <script src="/public/js/login.js"></script>
 <script src="/public/js/auth-menu.js"></script>
 <script src="/public/js/create_post.js"></script>
+<script src="/public/js/review.js"></script>
 
 </body>
 </html>

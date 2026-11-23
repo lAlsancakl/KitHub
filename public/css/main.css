@@ -178,11 +178,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
 .theme-toggle-btn:hover {
     background-color: var(--accent-light);
+    transform: translateY(-1px);
 }
 
 .footer-divider {
@@ -263,4 +264,250 @@ body {
     .sidebar-left {
         display: none;
     }
+}
+
+body {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+body[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #11131a;
+    --surface: #1b1e28;
+    --sidebar: #171923;
+    --accent: #d8958d;
+    --accent-hover: #e7aaa1;
+    --accent-light: #33272d;
+    --text: #f2e9e5;
+    --muted: #b6a8a2;
+    --border: #34313a;
+    --shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+}
+
+body[data-theme="dark"] .sidebar-right {
+    background-color: var(--sidebar);
+}
+
+body[data-theme="dark"] .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: #49404a;
+}
+
+body[data-theme="dark"] .post-card,
+body[data-theme="dark"] .profile-header-card,
+body[data-theme="dark"] .auth-card {
+    background-color: var(--surface);
+    border-color: var(--border);
+    box-shadow: var(--shadow);
+}
+
+body[data-theme="dark"] .post-card,
+body[data-theme="dark"] .profile-header-card,
+body[data-theme="dark"] .auth-card,
+body[data-theme="dark"] .kithub-modal-box {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .user-name,
+body[data-theme="dark"] .book-title,
+body[data-theme="dark"] .profile-display-name,
+body[data-theme="dark"] .profile-counts-bar strong,
+body[data-theme="dark"] .section-subtitle,
+body[data-theme="dark"] .reading-book-title,
+body[data-theme="dark"] .auth-header h2 {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .post-info-text,
+body[data-theme="dark"] .book-rating-info,
+body[data-theme="dark"] .profile-username,
+body[data-theme="dark"] .profile-meta-item,
+body[data-theme="dark"] .profile-counts-bar,
+body[data-theme="dark"] .reading-page-text,
+body[data-theme="dark"] .auth-header p,
+body[data-theme="dark"] .auth-footer {
+    color: var(--muted);
+}
+
+body[data-theme="dark"] .post-action-desc,
+body[data-theme="dark"] .post-text-content,
+body[data-theme="dark"] .book-author {
+    color: #ded5d1;
+}
+
+body[data-theme="dark"] .book-stats-bar,
+body[data-theme="dark"] .book-card-embedded,
+body[data-theme="dark"] .reading-book-card,
+body[data-theme="dark"] .profile-tab:hover {
+    background-color: #222630;
+    border-color: var(--border);
+    color: #d8cfcb;
+}
+
+body[data-theme="dark"] .book-cover-placeholder,
+body[data-theme="dark"] .book-cover-container,
+body[data-theme="dark"] .user-avatar {
+    background-color: #292635;
+    border-color: #4a3b46;
+}
+
+body[data-theme="dark"] .book-cover-placeholder,
+body[data-theme="dark"] .badge-status,
+body[data-theme="dark"] .profile-role-badge {
+    color: #e6aaa1;
+}
+
+body[data-theme="dark"] .badge-status,
+body[data-theme="dark"] .profile-role-badge {
+    background-color: #382a31;
+    border-color: #5a4047;
+}
+
+body[data-theme="dark"] .post-footer-actions,
+body[data-theme="dark"] .currently-reading-section,
+body[data-theme="dark"] .profile-tabs {
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] .action-btn,
+body[data-theme="dark"] .profile-tab {
+    color: var(--muted);
+}
+
+body[data-theme="dark"] .action-btn:hover,
+body[data-theme="dark"] .profile-tab:hover,
+body[data-theme="dark"] .profile-tab.active {
+    color: #e7aaa1;
+}
+
+body[data-theme="dark"] .profile-tab.active {
+    border-bottom-color: #d8958d;
+}
+
+body[data-theme="dark"] .profile-avatar-wrapper {
+    border-color: var(--surface);
+}
+
+body[data-theme="dark"] .edit-profile-btn {
+    background-color: #252833;
+    border-color: #484550;
+    color: var(--text);
+}
+
+body[data-theme="dark"] .edit-profile-btn:hover {
+    background-color: #30313d;
+    border-color: #6a555d;
+}
+
+body[data-theme="dark"] .reading-progress-track {
+    background-color: #3a3740;
+}
+
+body[data-theme="dark"] .auth-header h2,
+body[data-theme="dark"] .auth-form .form-group label,
+body[data-theme="dark"] .auth-footer a {
+    color: #e7aaa1;
+}
+
+body[data-theme="dark"] .auth-form input,
+body[data-theme="dark"] .auth-form select,
+body[data-theme="dark"] .kithub-modal-body input,
+body[data-theme="dark"] .kithub-modal-body select,
+body[data-theme="dark"] .kithub-modal-body textarea {
+    background-color: #222630;
+    border-color: #45414b;
+    color: var(--text);
+}
+
+body[data-theme="dark"] .auth-form input:focus,
+body[data-theme="dark"] .auth-form select:focus,
+body[data-theme="dark"] .kithub-modal-body input:focus,
+body[data-theme="dark"] .kithub-modal-body select:focus,
+body[data-theme="dark"] .kithub-modal-body textarea:focus {
+    background-color: #252833;
+    border-color: #d8958d;
+}
+
+body[data-theme="dark"] .file-input,
+body[data-theme="dark"] #readModal input[type="file"] {
+    background-color: #222630;
+    border-color: #51454c;
+    color: var(--text);
+}
+
+body[data-theme="dark"] .file-input::file-selector-button,
+body[data-theme="dark"] #readModal input[type="file"]::file-selector-button {
+    background-color: #382a31;
+    color: #e7aaa1;
+}
+
+body[data-theme="dark"] .kithub-modal-box {
+    background-color: #1b1e28;
+    border-color: var(--border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+body[data-theme="dark"] .kithub-modal-header,
+body[data-theme="dark"] #readModal .kithub-modal-header,
+body[data-theme="dark"] #reviewModal .kithub-modal-header {
+    background-color: #22232d;
+    border-bottom-color: var(--border);
+}
+
+body[data-theme="dark"] .kithub-modal-header h3,
+body[data-theme="dark"] #readModal .kithub-modal-header h3,
+body[data-theme="dark"] #reviewModal .kithub-modal-header h3,
+body[data-theme="dark"] .kithub-modal-body,
+body[data-theme="dark"] #readModal .kithub-modal-body,
+body[data-theme="dark"] #reviewModal .kithub-modal-body,
+body[data-theme="dark"] #readModal label,
+body[data-theme="dark"] #reviewModal label {
+    color: var(--text);
+}
+
+body[data-theme="dark"] #readModal input,
+body[data-theme="dark"] #readModal select,
+body[data-theme="dark"] #reviewModal input,
+body[data-theme="dark"] #reviewModal select,
+body[data-theme="dark"] #reviewModal textarea {
+    background-color: #222630;
+    border-color: #45414b;
+    color: var(--text);
+}
+
+body[data-theme="dark"] #readModal #currentPageGroup,
+body[data-theme="dark"] #readModal #durationGroup,
+body[data-theme="dark"] .review-book-preview {
+    background-color: #24232d;
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] .review-book-preview h4 {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .review-book-preview p,
+body[data-theme="dark"] .review-char-count,
+body[data-theme="dark"] #readingMessage,
+body[data-theme="dark"] #reviewMessage,
+body[data-theme="dark"] .modal-close-btn {
+    color: var(--muted);
+}
+
+body[data-theme="dark"] .modal-close-btn:hover,
+body[data-theme="dark"] #readModal .modal-close-btn:hover,
+body[data-theme="dark"] #reviewModal .modal-close-btn:hover {
+    background-color: var(--accent-light);
+    color: #e7aaa1;
+}
+
+body[data-theme="dark"] .kithub-modal-overlay {
+    background-color: rgba(5, 6, 10, 0.76);
+}
+
+body[data-theme="dark"] .theme-toggle-btn:hover,
+body[data-theme="dark"] .settings-link:hover,
+body[data-theme="dark"] .nav-item:hover,
+body[data-theme="dark"] .nav-item.active {
+    background-color: var(--accent-light);
+    color: var(--accent-hover);
 }

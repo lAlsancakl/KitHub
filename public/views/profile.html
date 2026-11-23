@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KitHub - Alsancak (@Alsancakl)</title>
+    <title>KitHub - Profile</title>
     <link rel="icon" type="image/png" href="/public/images/favicon.png">
     <link rel="stylesheet" href="/public/css/main.css">
     <link rel="stylesheet" href="/public/css/index.css">
     <link rel="stylesheet" href="/public/css/create_post.css">
     <link rel="stylesheet" href="/public/css/profile.css">
+    <link rel="stylesheet" href="/public/css/review.css">
 </head>
 <body>
 
@@ -75,13 +76,13 @@
                     </div>
 
                     <div id="userMenu" hidden>
-                        <a href="/profile/" class="nav-item">
+                        <a href="/profile/" id="sidebarProfileLink" class="nav-item">
                             <img id="sidebarProfilePhoto"
-                                 src="/public/images/default-profile.png"
-                                 alt="Profile"
-                                 width="28"
-                                 height="28"
-                                 style="border-radius:50%; object-fit:cover; margin-left:-4px;">
+                                src="/public/images/default-profile.png"
+                                alt="Profile"
+                                width="28"
+                                height="28"
+                                style="border-radius:50%; object-fit:cover; margin-left:-4px;">
                             <span>Profile</span>
                         </a>
 
@@ -133,7 +134,7 @@
 
             <!-- En Alt Tema ve Ayarlar Çubuğu -->
             <div class="sidebar-footer">
-                <button class="theme-toggle-btn" title="Toggle Theme">
+                <button type="button" class="theme-toggle-btn" title="Gece moduna geç" aria-label="Gece moduna geç" aria-pressed="false">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                 </button>
                 <div class="footer-divider"></div>
@@ -154,7 +155,7 @@
                 <!-- PROFILE HEADER CARD -->
                 <section class="profile-header-card">
                     <div class="profile-banner">
-                        <img src="/public/images/background.jpg" alt="Profile Banner" class="profile-banner-img">
+                        <img id="profileBannerImg" src="" alt="Profile Banner" class="profile-banner-img">
                         <a href="/" class="banner-back-btn" title="Back to Feed">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                         </a>
@@ -162,24 +163,25 @@
 
                     <div class="profile-identity-row">
                         <div class="profile-avatar-wrapper">
-                            <img src="/uploads/profiles/pp1.jpg" alt="Alsancak" class="profile-avatar-img">
+                            <img id="profileAvatarImg" src="/public/images/default-profile.png" alt="Profile Avatar" class="profile-avatar-img">
                         </div>
                         <div class="profile-actions">
-                            <button class="edit-profile-btn">Edit Profile</button>
+                            <button type="button" class="edit-profile-btn" id="editProfileBannerBtn">Edit Profile</button>
+                            <input type="file" id="bannerFileInput" name="banner_photo" accept="image/*" hidden>
                         </div>
                     </div>
 
                     <div class="profile-bio-section">
                         <div class="profile-name-line">
-                            <h1 class="profile-display-name">Alsancak</h1>
+                            <h1 id="profileDisplayName" class="profile-display-name">Loading...</h1>
                             <span class="profile-role-badge">Reader</span>
                         </div>
-                        <span class="profile-username">@Alsancakl</span>
+                        <span id="profileUsernameHandle" class="profile-username">@...</span>
 
                         <div class="profile-meta-list">
                             <span class="profile-meta-item">
                                 <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                Joined June 2026
+                                <span id="profileJoinedDate">Loading...</span>
                             </span>
                         </div>
 
@@ -299,7 +301,7 @@
         <!-- 3. SAĞ SÜTUN -->
         <aside class="sidebar-right"></aside>
 
-        <!-- REVIEW MODAL -->
+        <!-- MODAL 1: CREATE A REVIEW -->
         <div class="kithub-modal-overlay" id="reviewModal">
             <div class="kithub-modal-box">
                 <div class="kithub-modal-header">
@@ -307,7 +309,53 @@
                     <button type="button" class="modal-close-btn" data-close="reviewModal">&times;</button>
                 </div>
                 <div class="kithub-modal-body">
-                    asd
+                    <form id="reviewForm">
+
+                        <div class="form-group">
+                            <label for="reviewBook">Select Book</label>
+                            <select id="reviewBook" name="reviewBook" required>
+                                <option value="">Select a book</option>
+                            </select>
+                        </div>
+                    
+                        <div class="review-book-preview" id="reviewBookPreview">
+                            <img id="reviewCover" src="" alt="Book Cover">
+                            <div>
+                                <h4 id="reviewBookTitle"></h4>
+                                <p id="reviewBookAuthor"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reviewTitle">Review Title</label>
+                            <input type="text" id="reviewTitle"
+                                placeholder="Give your review a title" required>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="reviewContent">Your Review</label>
+                            <textarea id="reviewContent"
+                                    placeholder="Share your thoughts about this book..."
+                                    rows="6" maxlength="2000" required></textarea>
+                            <div class="review-char-count">
+                                <span id="reviewCharCount">0</span>/2000
+                            </div>
+                        </div>
+                    
+                        <div class="form-group review-spoiler">
+                            <label>
+                                <input type="checkbox" id="reviewSpoiler">
+                                This review contains spoilers
+                            </label>
+                        </div>
+                    
+                        <button type="submit" class="review-submit-btn">
+                            Submit Review
+                        </button>
+                    
+                    </form>
+                
+                    <div id="reviewMessage"></div>
                 </div>
             </div>
         </div>
@@ -391,9 +439,12 @@
         });
     </script>
 
+
     <!-- JS SCRIPTS -->
     <script src="/public/js/index.js"></script>
     <script src="/public/js/auth-menu.js"></script>
     <script src="/public/js/create_post.js"></script>
+    <script src="/public/js/profile.js"></script>
+    <script src="/public/js/review.js"></script>
 </body>
 </html>

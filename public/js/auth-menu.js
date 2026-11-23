@@ -47,11 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         logoutBtn.addEventListener("click", async (event) => {
             event.preventDefault();
 
-            const confirmLogout = confirm("Are you sure you want to log out?");
-            if (!confirmLogout) {
-                return;
-            }
-
             try {
                 const response = await fetch("/logout", {
                     method: "POST",
@@ -60,12 +55,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 if (response.ok) {
                     window.location.href = "/";
-                } else {
-                    alert("Logout failed.");
                 }
             } catch (error) {
                 console.error(error);
-                alert("Cannot connect to the server.");
             }
         });
     }

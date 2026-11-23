@@ -226,12 +226,8 @@
 
         <!-- 2. ORTA SÜTUN: Gönderiler -->
         <main class="main-feed">
-            <!-- <div class="feed-container"> -->
-                <main class="main-feed">
-                    <div class="feed-container" id="feedContainer">
-                        <p class="feed-loading">Loading posts...</p>
-                    </div>
-                </main>
+            <div class="feed-container" id="feedContainer">
+                <p class="feed-loading">Loading posts...</p>
             </div>
         </main>
 
@@ -255,7 +251,7 @@
                                 <option value="">Select a book</option>
                             </select>
                         </div>
-                    
+
                         <div class="review-book-preview" id="reviewBookPreview">
                             <img id="reviewCover" src="" alt="Book Cover">
                             <div>
@@ -269,7 +265,7 @@
                             <input type="text" id="reviewTitle"
                                    placeholder="Give your review a title" required>
                         </div>
-                    
+
                         <div class="form-group">
                             <label for="reviewContent">Your Review</label>
                             <textarea id="reviewContent"
@@ -279,20 +275,20 @@
                                 <span id="reviewCharCount">0</span>/2000
                             </div>
                         </div>
-                    
+
                         <div class="form-group review-spoiler">
                             <label>
                                 <input type="checkbox" id="reviewSpoiler">
                                 This review contains spoilers
                             </label>
                         </div>
-                    
+
                         <button type="submit" class="review-submit-btn">
                             Submit Review
                         </button>
-                    
+
                     </form>
-                
+
                     <div id="reviewMessage"></div>
                 </div>
             </div>
@@ -371,4 +367,5 @@
     <script src="/public/js/profile.js"></script>
     <script src="/public/js/feed.js"></script>
 </body>
+
 </html>

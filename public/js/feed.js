@@ -1,4 +1,3 @@
-
 const feedContainer = document.getElementById("feedContainer");
 
 function escapeHTML(value) {
@@ -69,7 +68,10 @@ function getReadingDescription(status) {
 }
 
 function renderPost(post) {
-    const username = escapeHTML(post.user.username);
+    const rawUsername = String(post.user.username ?? "");
+    const username = escapeHTML(rawUsername);
+    const profileUrl = `/profile/${encodeURIComponent(rawUsername)}`;
+
     const profilePhoto = escapeHTML(
         post.user.profile_photo || "/public/images/default-profile.png"
     );
@@ -79,45 +81,6 @@ function renderPost(post) {
     const cover = escapeHTML(post.book.cover || "");
     const pageCount = post.book.page_count;
     const date = formatDate(post.created_at);
-
-    const header = `
-        <div class="post-header">
-            <img src="${profilePhoto}"
-                alt="Avatar"
-                class="user-avatar"
-                onerror="this.src='/public/images/default-profile.png'">
-
-            <div class="user-meta">
-                <span class="user-name">${username}</span>
-                <span class="post-info-text">${date}</span>
-            </div>
-        </div>
-    `;
-
-    
-const badge = getBookBadge(post);
-
-    const bookCard = `
-        <div class="book-card-embedded">
-            <div class="book-cover-container">
-                <img src="${cover}"
-                    alt="${bookTitle}"
-                    class="book-cover-img">
-            </div>
-    
-            <div class="book-details">
-                <h3 class="book-title">${bookTitle}</h3>
-                <p class="book-author">${author}</p>
-    
-                <span class="badge-status ${badge.className}">
-                    ${escapeHTML(badge.text)}
-                </span>
-            </div>
-        </div>
-`;
-
-
-if (post.type === "reading") {
 
     const pageIcon = `
         <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
@@ -144,46 +107,84 @@ if (post.type === "reading") {
         </svg>
     `;
 
-    let stats = `
-        <span class="stat-item">
-            ${pageIcon}${pageCount} pages
-        </span>
+    const header = `
+        <div class="post-header">
+            <a href="${profileUrl}" class="user-profile-link">
+                <img src="${profilePhoto}"
+                    alt="Avatar"
+                    class="user-avatar"
+                    onerror="this.src='/public/images/default-profile.png'">
+            </a>
 
-        <span class="stat-item">
-            ${post.status === "finished" ? checkIcon : clockIcon}${escapeHTML(getStatusText(post.status))}
-        </span>
+            <div class="user-meta">
+                <a href="${profileUrl}" class="user-name">${username}</a>
+                <span class="post-info-text">${date}</span>
+            </div>
+        </div>
     `;
 
-    if (post.status === "reading" && post.current_page) {
-        stats += `
-            <span class="stat-item">
-                ${pageIcon}Page ${post.current_page} of ${pageCount}
-            </span>
-        `;
-    }
+    const badge = getBookBadge(post);
 
-    if (post.status === "finished" && post.reading_days) {
-        stats += `
-            <span class="stat-item">
-                ${clockIcon}Read in ${post.reading_days} days
-            </span>
-        `;
-    }
+    const bookCard = `
+        <div class="book-card-embedded">
+            <div class="book-cover-container">
+                <img src="${cover}"
+                    alt="${bookTitle}"
+                    class="book-cover-img">
+            </div>
 
-    if (date) {
-        stats += `
+            <div class="book-details">
+                <h3 class="book-title">${bookTitle}</h3>
+                <p class="book-author">${author}</p>
+
+                <span class="badge-status ${badge.className}">
+                    ${escapeHTML(badge.text)}
+                </span>
+            </div>
+        </div>
+    `;
+
+    if (post.type === "reading") {
+        let stats = `
             <span class="stat-item">
-                ${escapeHTML(date)}
+                ${pageIcon}${pageCount} pages
+            </span>
+
+            <span class="stat-item">
+                ${post.status === "finished" ? checkIcon : clockIcon}${escapeHTML(getStatusText(post.status))}
             </span>
         `;
-    }
+
+        if (post.status === "reading" && post.current_page) {
+            stats += `
+                <span class="stat-item">
+                    ${pageIcon}Page ${post.current_page} of ${pageCount}
+                </span>
+            `;
+        }
+
+        if (post.status === "finished" && post.reading_days) {
+            stats += `
+                <span class="stat-item">
+                    ${clockIcon}Read in ${post.reading_days} days
+                </span>
+            `;
+        }
+
+        if (date) {
+            stats += `
+                <span class="stat-item">
+                    ${escapeHTML(date)}
+                </span>
+            `;
+        }
 
         return `
             <article class="post-card">
                 ${header}
 
                 <div class="post-action-desc">
-                    <strong>${username}</strong>
+                    <a href="${profileUrl}" class="user-name-inline"><strong>${username}</strong></a>
                     ${escapeHTML(getReadingDescription(post.status))}
                 </div>
 
@@ -200,20 +201,13 @@ if (post.type === "reading") {
         const spoilerWarning = post.spoiler
             ? "<p><strong>This review contains spoilers!</strong></p>"
             : "";
-        const clockIcon = `
-        <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-        </svg>
-    `;
-    
+
         return `
             <article class="post-card">
                 ${header}
 
                 <div class="book-stats-bar">
-                    <span class="stat-item">${pageCount} pages</span>
+                    <span class="stat-item">${pageIcon}${pageCount} pages</span>
                     <span class="stat-item">${clockIcon}Read in ${post.reading_days} days</span>
                     <span class="stat-item">${escapeHTML(date)}</span>
                 </div>

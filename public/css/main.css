@@ -511,3 +511,35 @@ body[data-theme="dark"] .nav-item.active {
     background-color: var(--accent-light);
     color: var(--accent-hover);
 }
+.user-profile-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.user-name {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.user-name:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.user-name-inline {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.user-name-inline:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    opacity: 0.85;
+}

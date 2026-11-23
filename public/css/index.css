@@ -192,3 +192,172 @@
     height: 14px;
     stroke: #6c757d;
 }
+
+
+/* =====================================
+   FEED - KITHUB BROWN & BEIGE THEME
+===================================== */
+
+/* LIGHT MODE */
+
+.post-card {
+    background-color: #fffaf5;
+    border: 1px solid #eadfd5;
+    box-shadow: 0 2px 8px rgba(101, 75, 60, 0.06);
+}
+
+.user-name,
+.book-title {
+    color: #654b3c;
+}
+
+.post-info-text,
+.book-rating-info {
+    color: #927766;
+}
+
+.post-action-desc,
+.book-author,
+.post-text-content {
+    color: #6b5548;
+}
+
+.book-stats-bar {
+    background-color: #f7eee7;
+    color: #6b5548;
+}
+
+.book-card-embedded {
+    background-color: #f7eee7;
+    border-color: #eadfd5;
+}
+
+.book-cover-container {
+    background-color: #ead9cc;
+    border-color: #dfcfc2;
+}
+
+.book-cover-placeholder {
+    background-color: #f5ebe3;
+    border-color: #c9a994;
+    color: #654b3c;
+}
+
+.badge-status {
+    background-color: #ead9cc;
+    color: #654b3c;
+}
+
+.post-footer-actions {
+    border-top-color: #eadfd5;
+}
+
+.action-btn {
+    color: #927766;
+}
+
+.action-btn:hover {
+    color: #865b45;
+}
+
+.stat-icon {
+    stroke: #927766;
+}
+
+
+/* DARK MODE */
+
+body[data-theme="dark"] .post-card {
+    background-color: #1b1e28;
+    border-color: #393944;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+body[data-theme="dark"] .user-name,
+body[data-theme="dark"] .book-title {
+    color: #f2e9e5;
+}
+
+body[data-theme="dark"] .post-info-text,
+body[data-theme="dark"] .book-rating-info {
+    color: #c4b5b0;
+}
+
+body[data-theme="dark"] .post-action-desc,
+body[data-theme="dark"] .book-author,
+body[data-theme="dark"] .post-text-content {
+    color: #e0d5d0;
+}
+
+body[data-theme="dark"] .book-stats-bar,
+body[data-theme="dark"] .book-card-embedded {
+    background-color: #22232d;
+    color: #e0d5d0;
+}
+
+body[data-theme="dark"] .book-card-embedded {
+    border-color: #393944;
+}
+
+body[data-theme="dark"] .book-cover-container {
+    background-color: #3a2b32;
+    border-color: #50434a;
+}
+
+body[data-theme="dark"] .book-cover-placeholder {
+    background-color: #3a2b32;
+    border-color: #50434a;
+    color: #f0b2a8;
+}
+
+body[data-theme="dark"] .badge-status {
+    background-color: #3a2b32;
+    color: #f0b2a8;
+}
+
+body[data-theme="dark"] .post-footer-actions {
+    border-top-color: #393944;
+}
+
+body[data-theme="dark"] .action-btn {
+    color: #c4b5b0;
+}
+
+body[data-theme="dark"] .action-btn:hover {
+    color: #d8958d;
+}
+
+body[data-theme="dark"] .stat-icon {
+    stroke: #c4b5b0;
+}
+
+
+/* READ BADGE - BEIGE / BROWN */
+
+.badge-status.badge-read {
+    background-color: #ead9cc;
+    color: #654b3c;
+    border: 1px solid #dfcfc2;
+}
+
+/* REVIEWED BADGE - DUSTY ROSE */
+
+.badge-status.badge-reviewed {
+    background-color: #f3dfdc;
+    color: #925e59;
+    border: 1px solid #e8c9c4;
+}
+
+/* DARK MODE */
+
+body[data-theme="dark"] .badge-status.badge-read {
+    background-color: #3a2b32;
+    color: #f0c4b8;
+    border-color: #60434a;
+}
+
+body[data-theme="dark"] .badge-status.badge-reviewed {
+    background-color: #493039;
+    color: #f0b2a8;
+    border-color: #69434d;
+}

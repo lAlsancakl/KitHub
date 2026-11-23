@@ -151,6 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
             readingMessage.style.color = "green";
             readingMessage.style.padding = "10px";
 
+            if (typeof window.loadFeed === "function") {
+                await window.loadFeed();
+            }
+
             submittedForm.reset();
 
             if (currentPageGroup) {

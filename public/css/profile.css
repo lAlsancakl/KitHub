@@ -286,3 +286,136 @@
     font-size: 12px;
     font-weight: 600;
 }
+
+/* Reading Edit Button */
+
+.edit-reading-btn {
+    align-self: flex-start;
+    margin-top: 5px;
+    padding: 5px 12px;
+    border: 1px solid #d9b99b;
+    border-radius: 16px;
+    background-color: #f5ede3;
+    color: #604735;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-reading-btn:hover {
+    background-color: #ead9c8;
+}
+
+.activity-edit-btn {
+    margin-left: auto;
+}
+
+/* Reading Edit Modal */
+
+.reading-edit-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(24, 35, 70, 0.55);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.reading-edit-overlay.active {
+    display: flex;
+}
+
+.reading-edit-modal {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.reading-edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.reading-edit-header h3 {
+    margin: 0;
+    color: #182346;
+    font-size: 18px;
+}
+
+.reading-edit-header button {
+    border: none;
+    background: none;
+    color: #868e96;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.reading-edit-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 16px;
+}
+
+.reading-edit-group label {
+    color: #182346;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.reading-edit-group input,
+.reading-edit-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #182346;
+    font-size: 13px;
+}
+
+.reading-edit-group input:focus,
+.reading-edit-group select:focus {
+    outline: none;
+    border-color: #C99591;
+}
+
+.reading-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.reading-edit-actions button {
+    padding: 9px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#cancelReadingEdit {
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: #5c5f66;
+}
+
+#saveReadingEdit {
+    border: 1px solid #182346;
+    background: #182346;
+    color: #ffffff;
+}
+
+#saveReadingEdit:hover {
+    background: #29385f;
+}

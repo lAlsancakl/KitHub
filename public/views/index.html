@@ -119,11 +119,11 @@
                     <div id="userMenu" hidden>
                         <a href="/profile/" id="sidebarProfileLink" class="nav-item">
                             <img id="sidebarProfilePhoto"
-                                 src="/public/images/default-profile.png"
-                                 alt="Profile"
-                                 width="28"
-                                 height="28"
-                                 style="border-radius:50%; object-fit:cover; margin-left:-4px;">
+                                src="/public/images/default-profile.png"
+                                alt="Profile"
+                                width="28"
+                                height="28"
+                                style="border-radius:50%; object-fit:cover; margin-left:-4px;">
                             <span>Profile</span>
                         </a>
 
@@ -226,125 +226,12 @@
 
         <!-- 2. ORTA SÜTUN: Gönderiler -->
         <main class="main-feed">
-
-            <div class="feed-container">
-
-                <!-- EXAMPLE 1: BOOK READING NOTIFICATION -->
-                <article class="post-card">
-                    <div class="post-header">
-                        <img src="/uploads/profiles/pp1.jpg" alt="Avatar" class="user-avatar">
-                        <div class="user-meta">
-                            <span class="user-name">Alsancak</span>
-                            <span class="post-info-text">@Alsancakl · 1h</span>
-                        </div>
+            <!-- <div class="feed-container"> -->
+                <main class="main-feed">
+                    <div class="feed-container" id="feedContainer">
+                        <p class="feed-loading">Loading posts...</p>
                     </div>
-
-                    <div class="post-action-desc">
-                        <strong>Alsancak</strong> finished reading a book
-                    </div>
-
-                    <div class="book-stats-bar">
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10 9 9 9 8 9"/>
-                            </svg>
-                            312 pages
-                        </span>
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                            Completed
-                        </span>
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            Read in 7 days
-                        </span>
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
-                            </svg>
-                            Nov 02, 2026
-                        </span>
-                    </div>
-
-                    <div class="book-card-embedded">
-                        <div class="book-cover-container">
-                            <img src="/uploads/book_cover/supheli.jpg" alt="Şüpheli" class="book-cover-img">
-                        </div>
-                        <div class="book-details">
-                            <h3 class="book-title">Şüpheli</h3>
-                            <p class="book-author">Keigo Higashino</p>
-                            <span class="badge-status">Read</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- EXAMPLE 2: BOOK REVIEW POST -->
-                <article class="post-card">
-                    <div class="post-header">
-                        <img src="/uploads/profiles/pp1.jpg" alt="Avatar" class="user-avatar">
-                        <div class="user-meta">
-                            <span class="user-name">Alsancak</span>
-                            <span class="post-info-text">@Alsancakl · 2h</span>
-                        </div>
-                    </div>
-
-                    <div class="book-stats-bar">
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                            </svg>
-                            128 pages
-                        </span>
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            Read in 5 days
-                        </span>
-                        <span class="stat-item">
-                            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
-                            </svg>
-                            Oct 26, 2026
-                        </span>
-                    </div>
-
-                    <div class="post-text-content">
-                        <p><strong>Might contain spoilers, read with caution!</strong></p>
-                        <p>The book was easy and smooth to read. Instead of traditional detective novels, we already know who committed the murder from the very beginning and follow how the story unfolds. Being a Japanese mystery novel added an extra point for me personally, and I really liked the plot twist towards the end. I would recommend it to anyone who wants to read it.</p>
-                    </div>
-
-                    <div class="book-card-embedded">
-                        <div class="book-cover-container">
-                            <img src="/uploads/book_cover/supheli.jpg" alt="Süpheli X" class="book-cover-img">
-                        </div>
-                        <div class="book-details">
-                            <h3 class="book-title">Süpheli X</h3>
-                            <p class="book-author">Süpheli X · Koridor Yayıncılık - 2021</p>
-                            <span class="badge-status">Reviewed</span>
-                        </div>
-                    </div>
-                </article>
-
+                </main>
             </div>
         </main>
 
@@ -482,5 +369,6 @@
     <script src="/public/js/create_post.js"></script>
     <script src="/public/js/review.js"></script>
     <script src="/public/js/profile.js"></script>
+    <script src="/public/js/feed.js"></script>
 </body>
 </html>

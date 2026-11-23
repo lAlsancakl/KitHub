@@ -130,7 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             message.textContent = "Review created successfully!";
-
+            
+            if (typeof window.loadFeed === "function") {
+                await window.loadFeed();
+            }
+            
             reviewForm.reset();
             charCount.textContent = "0";
             preview.style.display = "none";

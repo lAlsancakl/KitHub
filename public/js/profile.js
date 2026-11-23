@@ -28,6 +28,161 @@ document.addEventListener("DOMContentLoaded", async () => {
         })[char]);
     }
 
+let isOwner = false;
+
+const statusLabels = {
+    want_to_read: "Want to Read",
+    reading: "Currently Reading",
+    finished: "Finished",
+    dropped: "Dropped"
+};
+
+function createEditModal() {
+    if (document.getElementById("editReadingModal")) return;
+
+    document.body.insertAdjacentHTML("beforeend", `
+        <div id="editReadingModal" class="reading-edit-overlay">
+            <div class="reading-edit-modal">
+                <div class="reading-edit-header">
+                    <h3>Edit Book</h3>
+                    <button type="button" id="closeReadingModal">&times;</button>
+                </div>
+
+                <form id="editReadingForm">
+                    <input type="hidden" id="editUserBookId">
+
+                    <div class="reading-edit-group">
+                        <label for="editBookStatus">Reading Status</label>
+                        <select id="editBookStatus" required>
+                            <option value="want_to_read">Want to Read</option>
+                            <option value="reading">Currently Reading</option>
+                            <option value="finished">Finished</option>
+                            <option value="dropped">Dropped</option>
+                        </select>
+                    </div>
+
+                    <div class="reading-edit-group">
+                        <label for="editCurrentPage">Current Page</label>
+                        <input type="number" id="editCurrentPage" min="0" required>
+                    </div>
+
+                    <div class="reading-edit-group">
+                        <label for="editReadingDays">Reading Duration (days)</label>
+                        <input type="number" id="editReadingDays" min="1">
+                    </div>
+
+                    <div class="reading-edit-actions">
+                        <button type="button" id="cancelReadingEdit">Cancel</button>
+                        <button type="submit" id="saveReadingEdit">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `);
+
+    const modal = document.getElementById("editReadingModal");
+
+    document.getElementById("closeReadingModal").addEventListener("click", closeEditModal);
+    document.getElementById("cancelReadingEdit").addEventListener("click", closeEditModal);
+
+    document.getElementById("editBookStatus").addEventListener("change", updateEditFields);
+
+    document.getElementById("editReadingForm").addEventListener("submit", saveReadingChanges);
+}
+
+function openEditModal(book) {
+    if (!book.user_book_id) {
+        alert("Book record could not be found.");
+        return;
+    }
+
+    createEditModal();
+
+    document.getElementById("editUserBookId").value = book.user_book_id;
+    document.getElementById("editBookStatus").value = book.status || "reading";
+    document.getElementById("editCurrentPage").value = book.current_page ?? 0;
+    document.getElementById("editReadingDays").value = book.reading_days ?? "";
+
+    document.getElementById("editReadingModal").classList.add("active");
+
+    updateEditFields();
+}
+
+function closeEditModal() {
+    document.getElementById("editReadingModal")?.classList.remove("active");
+}
+
+function updateEditFields() {
+    const status = document.getElementById("editBookStatus").value;
+    const pageInput = document.getElementById("editCurrentPage");
+    const daysInput = document.getElementById("editReadingDays");
+
+    if (status === "finished") {
+        daysInput.required = true;
+        daysInput.disabled = false;
+    } else {
+        daysInput.required = false;
+        daysInput.disabled = status !== "reading";
+    }
+
+    pageInput.disabled = status === "finished" ||
+        status === "want_to_read" ||
+        status === "dropped";
+}
+
+async function saveReadingChanges(event) {
+    event.preventDefault();
+
+    const userBookId = document.getElementById("editUserBookId").value;
+    const status = document.getElementById("editBookStatus").value;
+    const currentPage = Number(document.getElementById("editCurrentPage").value);
+    const readingDaysValue = document.getElementById("editReadingDays").value;
+
+    const payload = {
+        status: status,
+        current_page: currentPage
+    };
+
+    if (readingDaysValue !== "") {
+        payload.reading_days = Number(readingDaysValue);
+    }
+
+    if (status === "finished" && (!payload.reading_days || payload.reading_days < 1)) {
+        alert("Please enter how many days it took to finish the book.");
+        return;
+    }
+
+    const saveButton = document.getElementById("saveReadingEdit");
+    saveButton.disabled = true;
+    saveButton.textContent = "Saving...";
+
+    try {
+        const response = await fetch(`/api/user-books/${userBookId}`, {
+            method: "PATCH",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.detail || "Book could not be updated.");
+        }
+
+        closeEditModal();
+        window.location.reload();
+
+    } catch (error) {
+        alert(error.message);
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save Changes";
+    }
+}
+
     function normalizeMediaUrl(url, fallback) {
         if (!url) return fallback;
         return url.startsWith("/") ? url : `/${url}`;
@@ -52,48 +207,66 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (booksTab) booksTab.textContent = `Books Read (${booksRead})`;
     }
 
-    function renderCurrentlyReading(books) {
-        if (!readingGrid) return;
+    
+function renderCurrentlyReading(books) {
+    if (!readingGrid) return;
 
-        readingGrid.innerHTML = "";
+    readingGrid.innerHTML = "";
 
-        if (!books.length) {
-            readingGrid.textContent = "No books currently being read.";
-            return;
-        }
+    if (!books.length) {
+        readingGrid.textContent = "No books currently being read.";
+        return;
+    }
 
-        books.forEach(book => {
-            const currentPage = Number(book.current_page) || 0;
-            const totalPages = Number(book.page_count) || 0;
-            const progress = totalPages > 0
-                ? Math.min(100, Math.max(0, currentPage / totalPages * 100))
-                : 0;
+    books.forEach(book => {
+        const currentPage = Number(book.current_page) || 0;
+        const totalPages = Number(book.page_count) || 0;
 
-            readingGrid.insertAdjacentHTML("beforeend", `
-                <div class="reading-book-card">
-                    <img src="${escapeHTML(getCover(book.cover))}"
-                         alt="${escapeHTML(book.title)}"
-                         class="reading-book-cover">
+        const progress = totalPages > 0
+            ? Math.min(100, Math.max(0, currentPage / totalPages * 100))
+            : 0;
 
-                    <div class="reading-book-info">
-                        <span class="reading-book-title">
-                            ${escapeHTML(book.title)}
-                        </span>
+        readingGrid.insertAdjacentHTML("beforeend", `
+            <div class="reading-book-card">
+                <img src="${escapeHTML(getCover(book.cover))}"
+                     alt="${escapeHTML(book.title)}"
+                     class="reading-book-cover">
 
-                        <span class="reading-page-text">
-                            ${currentPage} / ${totalPages} pages
-                        </span>
+                <div class="reading-book-info">
+                    <span class="reading-book-title">
+                        ${escapeHTML(book.title)}
+                    </span>
 
-                        <div class="reading-progress-track">
-                            <div class="reading-progress-fill"
-                                 style="width: ${progress}%;">
-                            </div>
+                    <span class="reading-page-text">
+                        ${currentPage} / ${totalPages} pages
+                    </span>
+
+                    <div class="reading-progress-track">
+                        <div class="reading-progress-fill"
+                             style="width: ${progress}%;">
                         </div>
                     </div>
+
+                    ${isOwner ? `
+                        <button
+                            type="button"
+                            class="edit-reading-btn"
+                            data-book='${escapeHTML(JSON.stringify(book))}'>
+                            Edit
+                        </button>
+                    ` : ""}
                 </div>
-            `);
+            </div>
+        `);
+    });
+
+    readingGrid.querySelectorAll(".edit-reading-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            openEditModal(JSON.parse(button.dataset.book));
         });
-    }
+    });
+}
+
 
     function renderActivities(activities, profileUsername, profilePhoto) {
         if (!activityList) return;
@@ -122,7 +295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const pageIcon = `
                 <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2">
+                    stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14 2 14 8 20 8"/>
                     <line x1="16" y1="13" x2="8" y2="13"/>
@@ -132,7 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const clockIcon = `
                 <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2">
+                    stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                 </svg>
@@ -140,7 +313,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const checkIcon = `
                 <svg class="stat-icon" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2">
+                    stroke="currentColor" stroke-width="2">
                     <polyline points="20 6 9 17 4 12"/>
                 </svg>
             `;
@@ -163,8 +336,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <article class="post-card" data-type="${type}">
                     <div class="post-header">
                         <img src="${escapeHTML(getCover(profilePhoto))}"
-                             alt="Avatar"
-                             class="user-avatar">
+                            alt="Avatar"
+                            class="user-avatar">
 
                         <div class="user-meta">
                             <span class="user-name">${escapeHTML(profileUsername)}</span>
@@ -194,8 +367,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <div class="book-card-embedded">
                         <div class="book-cover-container">
                             <img src="${cover}"
-                                 alt="${title}"
-                                 class="book-cover-img">
+                                alt="${title}"
+                                class="book-cover-img">
                         </div>
 
                         <div class="book-details">
@@ -205,12 +378,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 ${isReview ? "Reviewed" : escapeHTML(post.status || "Reading")}
                             </span>
                         </div>
+
+                    ${!isReview && isOwner && post.user_book_id ? `
+                        <button
+                            type="button"
+                            class="edit-reading-btn activity-edit-btn"
+                            data-book='${escapeHTML(JSON.stringify({
+                                user_book_id: post.user_book_id,
+                                status: post.status,
+                                current_page: post.current_page,
+                                reading_days: post.reading_days
+                            }))}'>
+                            Edit
+                        </button>
+                    ` : ""}
                     </div>
                 </article>
             `);
         });
     }
-
+    activityList.querySelectorAll(".activity-edit-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            openEditModal(JSON.parse(button.dataset.book));
+        });
+    });
     if (editBannerBtn && bannerInputEl) {
         editBannerBtn.addEventListener("click", () => {
             bannerInputEl.click();
@@ -272,7 +463,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const data = await res.json();
-
+        
+        const meResponse = await fetch("/me", {
+            credentials: "same-origin"
+        });
+        
+        if (meResponse.ok) {
+            const me = await meResponse.json();
+            isOwner = String(me.user_id) === String(data.user_id);
+        }
+        
         document.title = `KitHub - ${data.username} (@${data.username})`;
 
         if (avatarEl) {

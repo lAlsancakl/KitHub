@@ -443,6 +443,160 @@ async def save_reading(
 
         raise
 
+class ReadingUpdate(BaseModel):
+    status: Optional[str] = None
+    current_page: Optional[int] = None
+    reading_days: Optional[int] = None
+
+
+@router.patch("/api/user-books/{user_book_id}")
+def update_reading(
+    user_book_id: int,
+    reading: ReadingUpdate,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    user = get_current_user(request, db)
+
+    updates = reading.dict(exclude_unset=True)
+
+    if not updates:
+        raise HTTPException(
+            status_code=400,
+            detail="No changes provided."
+        )
+
+    # Find the reading record and verify ownership
+    existing = db.execute(
+        text("""
+            SELECT
+                ub.user_book_id,
+                ub.status,
+                ub.current_page,
+                ub.reading_days,
+                ub.started_at,
+                ub.finished_at,
+                b.page_count
+            FROM user_books ub
+            JOIN books b ON ub.book_id = b.book_id
+            WHERE ub.user_book_id = :user_book_id
+              AND ub.user_id = :user_id
+        """),
+        {
+            "user_book_id": user_book_id,
+            "user_id": user["user_id"]
+        }
+    ).mappings().first()
+
+    if not existing:
+        raise HTTPException(
+            status_code=404,
+            detail="Reading record not found."
+        )
+
+    valid_statuses = [
+        "want_to_read",
+        "reading",
+        "finished",
+        "dropped"
+    ]
+
+    new_status = updates.get("status", existing["status"])
+    new_page = updates.get("current_page", existing["current_page"])
+    new_days = updates.get("reading_days", existing["reading_days"])
+
+    if new_status not in valid_statuses:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid reading status."
+        )
+
+    if new_page is None or new_page < 0 or new_page > existing["page_count"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid current page."
+        )
+
+    if new_status == "reading" and new_page < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Current page must be at least 1."
+        )
+
+    if new_status == "finished":
+        if new_days is None or new_days < 1:
+            raise HTTPException(
+                status_code=400,
+                detail="Reading duration must be at least 1 day."
+            )
+
+    if new_status == "finished":
+        new_page = existing["page_count"]
+
+    elif new_status in ["want_to_read", "dropped"]:
+        new_page = 0
+        new_days = 0
+
+    today = date.today()
+
+    started_at = existing["started_at"]
+    finished_at = existing["finished_at"]
+
+    if new_status == "reading":
+        if existing["status"] != "reading" and not started_at:
+            started_at = today
+
+        finished_at = None
+        new_days = 0
+
+    elif new_status == "finished":
+        if existing["status"] != "finished":
+            if not started_at:
+                started_at = today - timedelta(days=new_days - 1)
+
+            finished_at = today
+
+    else:
+        finished_at = None
+        if new_status == "want_to_read":
+            started_at = None
+
+    try:
+        db.execute(
+            text("""
+                UPDATE user_books
+                SET status = :status,
+                    current_page = :current_page,
+                    reading_days = :reading_days,
+                    started_at = :started_at,
+                    finished_at = :finished_at
+                WHERE user_book_id = :user_book_id
+                  AND user_id = :user_id
+            """),
+            {
+                "status": new_status,
+                "current_page": new_page,
+                "reading_days": new_days,
+                "started_at": started_at,
+                "finished_at": finished_at,
+                "user_book_id": user_book_id,
+                "user_id": user["user_id"]
+            }
+        )
+
+        db.commit()
+
+    except Exception:
+        db.rollback()
+        raise
+
+    return {
+        "message": "Reading updated successfully!",
+        "user_book_id": user_book_id,
+        "status": new_status,
+        "current_page": new_page,
+        "reading_days": new_days
+    }
 
 @router.get("/api/profile/{username}")
 def get_user_profile(username: str, db: Session = Depends(get_db)):
@@ -501,6 +655,7 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
     reading_books = db.execute(
         text("""
             SELECT
+                ub.user_book_id,
                 b.book_id,
                 b.title,
                 b.author,
@@ -554,6 +709,7 @@ def get_user_profile(username: str, db: Session = Depends(get_db)):
 
         "currently_reading": [
             {
+                "user_book_id": book["user_book_id"],
                 "book_id": book["book_id"],
                 "title": book["title"],
                 "author": book["author"],
@@ -781,3 +937,83 @@ def create_review(
         "message": "Review created successfully!",
         "post_id": post_id
     }
+@router.get("/api/feed")
+def get_feed(db: Session = Depends(get_db)):
+
+    feed_posts = db.execute(
+        text("""
+            SELECT
+                p.post_id,
+                p.post_type,
+                p.post_title,
+                p.content,
+                p.is_spoiler,
+                p.created_at,
+
+                u.user_id,
+                u.username,
+                u.profile_photo,
+
+                b.book_id,
+                b.title AS book_title,
+                b.author,
+                b.book_cover,
+                b.page_count,
+
+                ub.status,
+                ub.current_page,
+                ub.reading_days
+
+            FROM posts p
+
+            JOIN users u
+                ON p.user_id = u.user_id
+
+            JOIN user_books ub
+                ON p.user_book_id = ub.user_book_id
+
+            JOIN books b
+                ON ub.book_id = b.book_id
+
+            ORDER BY p.created_at DESC, p.post_id DESC
+            LIMIT 50
+        """)
+    ).mappings().all()
+
+    return [
+        {
+            "post_id": post["post_id"],
+            "type": post["post_type"],
+            "post_title": post["post_title"],
+            "content": post["content"],
+            "spoiler": bool(post["is_spoiler"]),
+            "created_at": (
+                post["created_at"].isoformat()
+                if post["created_at"] else None
+            ),
+
+            "user": {
+                "user_id": post["user_id"],
+                "username": post["username"],
+                "profile_photo": format_media_url(
+                    post["profile_photo"],
+                    "/public/images/default-profile.png"
+                )
+            },
+
+            "book": {
+                "book_id": post["book_id"],
+                "title": post["book_title"],
+                "author": post["author"],
+                "cover": format_media_url(
+                    post["book_cover"], ""
+                ),
+                "page_count": post["page_count"]
+            },
+
+            "status": post["status"],
+            "current_page": post["current_page"],
+            "reading_days": post["reading_days"]
+        }
+        for post in feed_posts
+    ]
